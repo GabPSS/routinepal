@@ -1,0 +1,33 @@
+{
+    "options": {
+        "name": "John Doe",
+        "toleranceMins": 15
+    },
+    "goalsets": [
+        {
+            "id": 1,
+            "name": "Morning routine",
+            "time": "08:00",
+            "actions": [
+                "Morning Prayer",
+                "Make bed",
+                "Brush teeth",
+                "Eat breakfast"
+            ]
+        },
+        {
+            "id": 2,
+            "name": "Night routine",
+            "time": "23:00",
+            "actions": [
+                "Brush teeth",
+                "Make bed",
+                "Night Prayer"
+            ]
+        },
+        {
+            "id": 3,
+            "name": "Food"
+        }
+    ]
+}
