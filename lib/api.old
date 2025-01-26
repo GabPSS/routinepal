@@ -1,7 +1,7 @@
-import 'package:routinepal/models/routine.dart';
-import 'package:routinepal/models/summary.dart';
-import 'package:routinepal/models/task.dart';
-import 'package:routinepal/models/task_group.dart';
+import '../packages/routinepal_api/lib/models/routine.dart';
+import '../packages/routinepal_api/lib/models/summary.dart';
+import '../packages/routinepal_api/lib/models/task.dart';
+import '../packages/routinepal_api/lib/models/task_group.dart';
 import 'package:sqflite/sqflite.dart';
 
 class Api {
@@ -13,55 +13,7 @@ class Api {
 
   Database? _database;
 
-  Future<void> init() async {
-    _database = await openDatabase(
-      'routine_data.db',
-      version: 1,
-      onCreate: (db, version) async {
-        await db.execute("""
--- task_groups definition
-
-CREATE TABLE task_groups (
-	group_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-	name TEXT
-);
-
-
--- tasks definition
-
-CREATE TABLE "tasks" (
-	task_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-	title TEXT NOT NULL,
-	description TEXT,
-	task_group_id INTEGER,
-	CONSTRAINT task_definitions_FK FOREIGN KEY (task_group_id) REFERENCES task_groups(group_id) ON DELETE CASCADE ON UPDATE CASCADE
-);
-
-
--- routines definition
-
-CREATE TABLE routines (
-	routine_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-	task_group_id INTEGER NOT NULL,
-	fulfillment_time TIME NOT NULL,
-	title TEXT NOT NULL,
-	CONSTRAINT routines_FK FOREIGN KEY (task_group_id) REFERENCES task_groups(group_id) ON DELETE CASCADE ON UPDATE CASCADE
-);
-
-
--- task_completions definition
-
-CREATE TABLE task_completions (
-	completion_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-	task_id INTEGER NOT NULL,
-	completion_date DATE NOT NULL,
-	completion_time TIME NOT NULL,
-	CONSTRAINT task_completions_FK FOREIGN KEY (task_id) REFERENCES tasks(task_id) ON DELETE CASCADE ON UPDATE CASCADE
-);
-""");
-      },
-    );
-  }
+  
 
   Future<Summary?> getSummary() async {
     final List<Map<String, dynamic>> taskGroups =

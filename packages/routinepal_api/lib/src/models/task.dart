@@ -1,3 +1,4 @@
+/// A basic task model class
 class Task {
   final int id;
   final String title;

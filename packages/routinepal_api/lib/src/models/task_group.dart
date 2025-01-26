@@ -1,5 +1,6 @@
-import 'package:routinepal/models/task.dart';
+import 'task.dart';
 
+/// Represents a group of tasks that must all be completed in a day.
 class TaskGroup {
   final int id;
   final String name;

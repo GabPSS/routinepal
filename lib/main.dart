@@ -1,9 +1,15 @@
-import 'package:flutter/material.dart';
-import 'package:routinepal/api.dart';
+import 'dart:developer';
 
-void main() {
-  // Initialize the database
-  Api().init();
+import 'package:flutter/material.dart';
+import 'package:routinepal_api/routinepal_api.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  RoutinepalSqliteDb db = RoutinepalSqliteDb();
+
+  await db.init();
+  log(db.getFulfillableRoutines().toString());
 
   runApp(const MainApp());
 }
