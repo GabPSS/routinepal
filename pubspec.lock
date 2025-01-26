@@ -150,8 +150,8 @@ packages:
   routinepal_api:
     dependency: "direct main"
     description:
-      path: "/media/gabp/lfs/Repositories/routinepal/packages/routinepal_api"
-      relative: false
+      path: "packages/routinepal_api"
+      relative: true
     source: path
     version: "0.0.1"
   sky_engine:
@@ -272,5 +272,5 @@ packages:
     source: hosted
     version: "14.3.0"
 sdks:
-  dart: ">=3.6.1 <4.0.0"
+  dart: ">=3.5.0 <4.0.0"
   flutter: ">=3.24.0"

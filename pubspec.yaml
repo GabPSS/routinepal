@@ -10,7 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   routinepal_api:
-    path: /media/gabp/lfs/Repositories/routinepal/packages/routinepal_api
+    path: packages/routinepal_api
 
 
 dev_dependencies:

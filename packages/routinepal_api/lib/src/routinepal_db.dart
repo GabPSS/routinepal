@@ -85,13 +85,11 @@ class RoutinepalSqliteDb implements RoutinepalDbBase {
 
   @override
   Future<List<Routine>> getFulfillableRoutines() async {
-    _db!.isOpen ? log("db is open") : log("db is closed");
-    log((await _db!.query('SQLITE_MASTER')).toString());
-
     List<Map<String, dynamic>> results = await _db!.query('routines');
 
     List<Routine> routines = [];
 
+    //TODO implement this
     for (var routineData in results) {
       log("fulfillment time: ${routineData['fulfillment_time']}");
     }
