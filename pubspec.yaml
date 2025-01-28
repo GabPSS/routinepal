@@ -11,6 +11,10 @@ dependencies:
     sdk: flutter
   routinepal_api:
     path: packages/routinepal_api
+  routinepal_manager:
+    path: packages/routinepal_manager
+  bloc: ^9.0.0
+  flutter_bloc: ^9.0.0
 
 
 dev_dependencies:

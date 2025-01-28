@@ -5,12 +5,14 @@ import 'task.dart';
 /// A basic model for a routine. A routine is composed of a [TaskGroup] that must be completed in a specific time of day.
 class Routine {
   final int id;
+  final int taskGroupId;
   final List<Task> tasks;
   final String title;
   final TimeOfDay fulfillmentTime;
 
   Routine({
     required this.id,
+    required this.taskGroupId,
     required this.tasks,
     required this.title,
     required this.fulfillmentTime,
