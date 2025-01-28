@@ -1,6 +1,6 @@
 name: routinepal_api
-description: "A new Flutter package project."
-version: 0.0.1
+description: "This package provides app integration with databases, exposing simple APIs to enable handling routine and task data."
+version: 0.1.0
 homepage:
 
 environment:

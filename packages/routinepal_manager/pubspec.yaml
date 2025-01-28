@@ -1,6 +1,6 @@
 name: routinepal_manager
-description: "A new Flutter package project."
-version: 0.0.1
+description: "This package provides methods and filters for managing routine and task data with routinepal_api."
+version: 0.1.0
 homepage:
 publish_to: none
 
