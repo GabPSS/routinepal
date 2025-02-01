@@ -105,6 +105,12 @@ class RoutinepalSqliteDb implements RoutinepalApi {
             'description': 'Eat a good breakfast',
             'task_group_id': 3
           });
+
+          db.insert('tasks', {
+            'title': 'Lectio Divina',
+            'description': 'Meditate on the word of God for 10 minutes',
+            'task_group_id': null
+          });
         }
       },
     );
@@ -183,15 +189,34 @@ class RoutinepalSqliteDb implements RoutinepalApi {
   }
 
   @override
-  Future<List<Task>> getLooseTasks() {
-    // TODO: implement getLooseTasks
-    throw UnimplementedError();
+  Future<List<Task>> getLooseTasks() async {
+    var taskData = await _db!.query('tasks', where: 'task_group_id IS NULL');
+
+    return taskData.map((task) {
+      return Task(
+        id: task['task_id'] as int,
+        title: task['title'] as String,
+        description: task['description'] as String,
+      );
+    }).toList();
   }
 
   @override
-  Future<List<TaskGroup>> getNonRoutineTaskGroups() {
-    // TODO: implement getNonRoutineTaskGroups
-    throw UnimplementedError();
+  Future<List<TaskGroup>> getNonRoutineTaskGroups() async {
+    var taskGroupData = await _db!.rawQuery(
+        'SELECT * FROM task_groups WHERE group_id NOT IN (SELECT task_group_id FROM routines)');
+
+    List<TaskGroup> taskGroups = [];
+
+    for (var group in taskGroupData) {
+      taskGroups.add(TaskGroup(
+        id: group['group_id'] as int,
+        name: group['name'] as String,
+        tasks: await getTasksPartOfGroup(group['group_id'] as int),
+      ));
+    }
+
+    return taskGroups;
   }
 
   @override

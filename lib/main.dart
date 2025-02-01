@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:routinepal/src/fulfillable_routines/bloc/fulfillable_routines_bloc.dart';
+import 'package:routinepal/src/task_overview/bloc/task_overview_bloc.dart';
 import 'package:routinepal/ui/app_screen.dart';
 import 'package:routinepal_api/routinepal_api.dart';
 import 'package:routinepal_manager/routinepal_manager.dart';
@@ -11,8 +12,15 @@ Future<void> main() async {
   RoutinepalManager manager = RoutinepalManager(RoutinepalSqliteDb());
   await manager.init();
 
-  runApp(BlocProvider(
-    create: (context) => FulfillableRoutinesBloc(manager),
+  runApp(MultiBlocProvider(
+    providers: [
+      BlocProvider(
+        create: (context) => FulfillableRoutinesBloc(manager),
+      ),
+      BlocProvider(
+        create: (context) => TaskOverviewBloc(manager),
+      ),
+    ],
     child: const MainApp(),
   ));
 }
@@ -30,6 +38,7 @@ class _MainAppState extends State<MainApp> {
     super.initState();
     BlocProvider.of<FulfillableRoutinesBloc>(context)
         .add(RoutineListRequested());
+    BlocProvider.of<TaskOverviewBloc>(context).add(TaskOverviewRequested());
   }
 
   @override

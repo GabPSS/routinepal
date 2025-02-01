@@ -193,14 +193,14 @@ packages:
       path: "packages/routinepal_api"
       relative: true
     source: path
-    version: "0.0.1"
+    version: "0.1.0"
   routinepal_manager:
     dependency: "direct main"
     description:
       path: "packages/routinepal_manager"
       relative: true
     source: path
-    version: "0.0.1"
+    version: "0.1.0"
   sky_engine:
     dependency: transitive
     description: flutter
