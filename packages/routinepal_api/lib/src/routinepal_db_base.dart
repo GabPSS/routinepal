@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:routinepal_api/src/models/models.dart';
 
 abstract class RoutinepalApi {
@@ -20,14 +19,16 @@ abstract class RoutinepalApi {
   /// Fetches all routines from the database.
   Future<List<Routine>> getRoutines();
 
+  Future<Routine?> isTaskPartOfRoutine(int taskId);
+
+  Future<Routine?> isTaskGroupPartOfRoutine(int groupId);
+
   /// Fetches a certain routine with id [routineId] from the database.
   Future<Routine?> getRoutine(int routineId);
 
-  /// Fetches all task completions on a certain [date].
-  ///
-  /// If the task was completed, the returned map will contain a non-null [TimeOfDay] for the task.
-  Future<Map<Task, TimeOfDay>> getTaskCompletionsForDate(DateTime date);
+  /// Fetches all task completion information for a certain [date].
+  Future<List<TaskCompletion>> getTaskCompletionsForDate(DateTime date);
 
-  // /// Creates an entry in `task_completions` for a task with id [taskId].
-  // Future<void> markTaskCompleted(int taskId);
+  /// Creates an entry in `task_completions` for a task with id [taskId].
+  Future<void> recordTaskFulfillment(int taskId, bool isFulfilled);
 }

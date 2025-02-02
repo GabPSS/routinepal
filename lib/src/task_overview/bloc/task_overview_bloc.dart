@@ -11,14 +11,15 @@ class TaskOverviewBloc extends Bloc<TaskOverviewEvent, TaskOverviewState> {
   final RoutinepalManager repository;
 
   TaskOverviewBloc(this.repository) : super(TaskOverviewInitial()) {
-    on<TaskOverviewRequested>((event, emit) async {
+    on<TaskOverviewLoadRequested>((event, emit) async {
+      log("Task overview load requested");
       try {
         var tasks = await repository.getTasksFor(Utils.today());
         emit(
           tasks.isNotEmpty ? TaskOverviewLoaded(tasks) : TaskOverviewEmpty(),
         );
       } catch (e) {
-        log(e.toString());
+        log("Error when loading Task Overview: $e");
         emit(TaskOverviewEmpty());
       }
     });

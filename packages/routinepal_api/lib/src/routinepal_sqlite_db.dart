@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:routinepal_api/src/routinepal_db_base.dart';
 import 'package:sqflite/sqflite.dart';
@@ -28,7 +30,7 @@ class RoutinepalSqliteDb implements RoutinepalApi {
       task_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
       title TEXT NOT NULL,
       description TEXT,
-      task_group_id INTEGER,
+      task_group_id INTEGER, minimum_duration_min INTEGER, maximum_duration_min INTEGER,
       CONSTRAINT task_definitions_FK FOREIGN KEY (task_group_id) REFERENCES task_groups(group_id) ON DELETE CASCADE ON UPDATE CASCADE
     );
     """);
@@ -47,7 +49,7 @@ class RoutinepalSqliteDb implements RoutinepalApi {
       completion_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
       task_id INTEGER NOT NULL,
       completion_date DATE NOT NULL,
-      completion_time TIME NOT NULL,
+      completion_time TIME NOT NULL, is_completed INTEGER NOT NULL,
       CONSTRAINT task_completions_FK FOREIGN KEY (task_id) REFERENCES tasks(task_id) ON DELETE CASCADE ON UPDATE CASCADE
     );
     """);
@@ -91,7 +93,8 @@ class RoutinepalSqliteDb implements RoutinepalApi {
           db.insert('tasks', {
             'title': 'Brush Teeth',
             'description': 'Brush your teeth',
-            'task_group_id': 3
+            'task_group_id': 3,
+            'maximum_duration_min': 2
           });
 
           db.insert('tasks', {
@@ -111,6 +114,28 @@ class RoutinepalSqliteDb implements RoutinepalApi {
             'description': 'Meditate on the word of God for 10 minutes',
             'task_group_id': null
           });
+
+          db.insert('tasks', {
+            'title': 'Do a Holy Hour',
+            'description': 'Spend an hour in prayer',
+            'task_group_id': null,
+            'minimum_duration_min': 60
+          });
+
+          db.insert('tasks', {
+            'title': 'Read a Book',
+            'description': 'Read a book for 30 minutes',
+            'task_group_id': null,
+            'maximum_duration_min': 30
+          });
+
+          db.insert('tasks', {
+            'title': 'Go for a Walk',
+            'description': 'Go for a walk for a while',
+            'task_group_id': null,
+            'minimum_duration_min': 15,
+            'maximum_duration_min': 60
+          });
         }
       },
     );
@@ -126,6 +151,8 @@ class RoutinepalSqliteDb implements RoutinepalApi {
         id: results[0]['task_id'],
         title: results[0]['title'],
         description: results[0]['description'],
+        minDuration: results[0]['minimum_duration_min'],
+        maxDuration: results[0]['maximum_duration_min'],
       );
     }
 
@@ -142,6 +169,8 @@ class RoutinepalSqliteDb implements RoutinepalApi {
         id: task['task_id'],
         title: task['title'],
         description: task['description'],
+        minDuration: task['minimum_duration_min'],
+        maxDuration: task['maximum_duration_min'],
       );
     }).toList();
   }
@@ -190,13 +219,16 @@ class RoutinepalSqliteDb implements RoutinepalApi {
 
   @override
   Future<List<Task>> getLooseTasks() async {
-    var taskData = await _db!.query('tasks', where: 'task_group_id IS NULL');
+    List<Map<String, dynamic>> taskData =
+        await _db!.query('tasks', where: 'task_group_id IS NULL');
 
     return taskData.map((task) {
       return Task(
         id: task['task_id'] as int,
         title: task['title'] as String,
         description: task['description'] as String,
+        minDuration: task['minimum_duration_min'] as int?,
+        maxDuration: task['maximum_duration_min'] as int?,
       );
     }).toList();
   }
@@ -220,21 +252,65 @@ class RoutinepalSqliteDb implements RoutinepalApi {
   }
 
   @override
-  Future<Map<Task, TimeOfDay>> getTaskCompletionsForDate(DateTime date) async {
+  Future<List<TaskCompletion>> getTaskCompletionsForDate(DateTime date) async {
     var completionData = await _db!.query('task_completions',
-        where: 'completion_date = ${DbUtils.formatSqlDate(date)}');
+        where: 'completion_date = \'${DbUtils.formatSqlDate(date)}\'');
 
-    Map<Task, TimeOfDay> completions = {};
+    List<TaskCompletion> completions = [];
+    List<Task> tasksForVerification = [];
 
     for (var completion in completionData) {
-      var task = await getTask(completion['task_id'] as int);
-      if (task != null) {
-        completions[task] =
+      Task task = (await getTask(completion['task_id'] as int))!;
+
+      // The check below is a self-cleanup action to remove duplicated completions.
+      if (!tasksForVerification.contains(task)) {
+        tasksForVerification.add(task);
+        bool isCompleted = (completion['is_completed'] as int) == 1;
+        TimeOfDay completionTime =
             DbUtils.parseSqlTime(completion['completion_time'] as String);
+
+        completions.add(TaskCompletion(
+          task: task,
+          completionTime: completionTime,
+          isFulfilled: isCompleted,
+        ));
+      } else {
+        purgeInvalidCompletion(completion['completion_id'] as int);
       }
     }
 
     return completions;
+  }
+
+  Future<void> purgeInvalidCompletion(int completionId) async {
+    log("WARNING: Detected a duplicate completion entry with id $completionId");
+    await _db!
+        .delete('task_completions', where: 'completion_id = $completionId');
+  }
+
+  @override
+  Future<Routine?> isTaskGroupPartOfRoutine(int groupId) =>
+      isTaskGroupPartOfRoutine(groupId);
+
+  @override
+  Future<Routine?> isTaskPartOfRoutine(int taskId) async {
+    var query = await _db!.query('routines', where: 'task_group_id = $taskId');
+
+    if (query.isNotEmpty) {
+      return _buildRoutineFromData(query[0], _db!);
+    }
+
+    return null;
+  }
+
+  @override
+  Future<void> recordTaskFulfillment(int taskId, bool isFulfilled) async {
+    await _db!.insert('task_completions', {
+      'task_id': taskId,
+      'completion_date': DbUtils.formatSqlDate(DateTime.now()),
+      'completion_time': DbUtils.formatSqlTime(TimeOfDay.now()),
+      'is_completed': isFulfilled ? 1 : 0,
+    });
   }
 }
 
@@ -244,6 +320,10 @@ final class DbUtils {
   static TimeOfDay parseSqlTime(String sqlTime) {
     var time = sqlTime.split(':');
     return TimeOfDay(hour: int.parse(time[0]), minute: int.parse(time[1]));
+  }
+
+  static String formatSqlTime(TimeOfDay time) {
+    return '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}:00';
   }
 
   static String formatSqlDate(DateTime date) {
