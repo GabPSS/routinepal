@@ -121,8 +121,7 @@ class FulfillmentResultPage extends StatelessWidget {
 
   final List<String> affirmingMessages = [
     "Keep it up! Not a cent of it goes to waste!",
-    "Every time you choose to do what is right, you grow in virtue, sincerity, honesty and strength."
-        "A small victory, but a blessing nonetheless!",
+    "Every time you choose to do what is right, you grow in virtue, sincerity, honesty and strength. A small victory, but a blessing nonetheless!",
     "Good job! It might be simple, but keeping your word is even more important!",
     "Keep it up! Consistency is key! Small steps means your journey lasts longer!"
   ];

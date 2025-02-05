@@ -48,7 +48,20 @@ class _MainAppState extends State<MainApp> {
               .add(TaskOverviewLoadRequested());
         }
       },
-      child: const MaterialApp(home: AppScreen()),
+      child: MaterialApp(
+        theme: ThemeData(
+            colorSchemeSeed: Colors.cyan,
+            textTheme: const TextTheme(
+              bodyMedium: TextStyle(fontSize: 16.0),
+            )),
+        darkTheme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: Colors.cyan,
+            brightness: Brightness.dark,
+          ),
+        ),
+        home: const AppScreen(),
+      ),
     );
   }
 }

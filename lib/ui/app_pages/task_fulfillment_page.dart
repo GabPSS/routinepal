@@ -164,12 +164,11 @@ Future<bool?> showFulfillmentAlertDialog(BuildContext context) {
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(false),
-                child: const Text('Cancel', textScaler: TextScaler.linear(1.5)),
+                child: const Text('Cancel'),
               ),
               TextButton(
                 onPressed: () => Navigator.of(context).pop(true),
-                child: const Text('Fulfill Task',
-                    textScaler: TextScaler.linear(1.5)),
+                child: const Text('Fulfill Task'),
               ),
             ],
           ));

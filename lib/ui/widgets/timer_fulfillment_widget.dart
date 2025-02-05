@@ -80,6 +80,8 @@ class _TimerFulfillmentWidgetState extends State<TimerFulfillmentWidget> {
                 width: MediaQuery.of(context).size.width - 128,
                 height: MediaQuery.of(context).size.width - 128,
                 child: CircularProgressIndicator(
+                  strokeWidth: 5,
+                  strokeCap: StrokeCap.round,
                   value: isRunning ? getProgress(totalSecondsElapsed) : 1,
                   color: isRunning ? getColor() : Colors.grey,
                   backgroundColor: Colors.grey[300],
@@ -113,13 +115,7 @@ class _TimerFulfillmentWidgetState extends State<TimerFulfillmentWidget> {
                 ),
               if (isRunning && isFulfillable)
                 FilledButton.icon(
-                  onPressed: () {
-                    timer?.cancel();
-                    timer = null;
-                    totalSecondsElapsed = 0;
-                    widget.onFulfillmentSuccessful?.call();
-                    setState(() {});
-                  },
+                  onPressed: fulfilTask,
                   icon: Icon(Icons.check),
                   label: Text("Fulfill", textScaler: TextScaler.linear(1.5)),
                 ),
@@ -161,6 +157,14 @@ class _TimerFulfillmentWidgetState extends State<TimerFulfillmentWidget> {
     timer = null;
     totalSecondsElapsed = 0;
     widget.onFulfillmentFailed?.call();
+    setState(() {});
+  }
+
+  void fulfilTask() {
+    timer?.cancel();
+    timer = null;
+    totalSecondsElapsed = 0;
+    widget.onFulfillmentSuccessful?.call();
     setState(() {});
   }
 
