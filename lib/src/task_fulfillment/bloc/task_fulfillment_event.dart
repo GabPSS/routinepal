@@ -5,6 +5,7 @@ sealed class TaskFulfillmentEvent {}
 
 class TaskFulfillmentRequested extends TaskFulfillmentEvent {
   final Task task;
+  final bool success;
 
-  TaskFulfillmentRequested(this.task);
+  TaskFulfillmentRequested(this.task, this.success);
 }

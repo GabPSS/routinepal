@@ -94,7 +94,8 @@ class RoutinepalSqliteDb implements RoutinepalApi {
             'title': 'Brush Teeth',
             'description': 'Brush your teeth',
             'task_group_id': 3,
-            'maximum_duration_min': 2
+            'maximum_duration_min': 2,
+            'minimum_duration_min': 2
           });
 
           db.insert('tasks', {
@@ -136,9 +137,32 @@ class RoutinepalSqliteDb implements RoutinepalApi {
             'minimum_duration_min': 15,
             'maximum_duration_min': 60
           });
+
+          db.insert('tasks', {
+            'title': 'Test1',
+            'description': 'test1',
+            'task_group_id': null,
+            'minimum_duration_min': 1
+          });
+          db.insert('tasks', {
+            'title': 'Test2',
+            'description': 'test2',
+            'task_group_id': null,
+            'maximum_duration_min': 1
+          });
+          db.insert('tasks', {
+            'title': 'Test3',
+            'description': 'test3',
+            'task_group_id': null,
+            'minimum_duration_min': 1,
+            'maximum_duration_min': 2
+          });
         }
       },
     );
+
+    //TODO: Remove this line when deploying
+    await _db!.execute('DELETE FROM task_completions');
   }
 
   @override

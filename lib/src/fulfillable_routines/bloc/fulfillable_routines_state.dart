@@ -7,7 +7,7 @@ final class FulfillableRoutinesInitial extends FulfillableRoutinesState {}
 final class FulfillableRoutinesEmpty extends FulfillableRoutinesState {}
 
 final class FulfillableRoutinesLoaded extends FulfillableRoutinesState {
-  final List<Routine> routines;
+  final List<api.Routine> routines;
 
   FulfillableRoutinesLoaded(this.routines);
 }

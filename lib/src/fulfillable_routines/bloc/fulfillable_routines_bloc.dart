@@ -1,18 +1,24 @@
 import 'package:bloc/bloc.dart';
-import 'package:routinepal_api/routinepal_api.dart';
-import 'package:routinepal_manager/routinepal_manager.dart';
+import 'package:routinepal_api/routinepal_api.dart' as api;
+import 'package:routinepal_manager/routinepal_manager.dart' as mgr;
 
 part 'fulfillable_routines_event.dart';
 part 'fulfillable_routines_state.dart';
 
 class FulfillableRoutinesBloc
     extends Bloc<FulfillableRoutinesEvent, FulfillableRoutinesState> {
-  final RoutinepalManager repository;
+  final mgr.RoutinepalManager repository;
 
   FulfillableRoutinesBloc(this.repository)
       : super(FulfillableRoutinesInitial()) {
-    on<RoutineListRequested>((event, emit) async {
+    on<FulfillableRoutinesEvent>((event, emit) async {
       try {
+        if (event is RoutineFulfillmentCancelled) {
+          for (var task in event.tasksRemaining) {
+            await repository.attemptTaskUnfulfillment(mgr.Task.mock(task.id));
+          }
+        }
+
         var list = await repository.getFulfillableRoutines();
 
         if (list.isEmpty) {

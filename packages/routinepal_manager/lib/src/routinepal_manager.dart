@@ -27,8 +27,9 @@ class RoutinepalManager {
         routine.tasks.getStatus(taskCompletions.allFor(routine.tasks)) !=
         fulfillable);
 
-    routines.removeWhere((element) =>
-        TimeOfDay.now().isNotWithin(element.fulfillmentTime, toleranceMins));
+    //TODO: Uncomment when deploying
+    // routines.removeWhere((element) =>
+    //     TimeOfDay.now().isNotWithin(element.fulfillmentTime, toleranceMins));
 
     return routines;
   }
@@ -116,6 +117,21 @@ class RoutinepalManager {
     }
 
     return isFulfillable;
+  }
+
+  Future<bool> attemptTaskUnfulfillment(models.Task task) async {
+    var taskCompletion = (await api.getTaskCompletionsForDate(DateTime.now()))
+        .where((completion) => completion.task.id == task.id)
+        .singleOrNull;
+
+    if (taskCompletion == fulfillable) {
+      api.recordTaskFulfillment(task.id, false);
+      log("Task unfulfilled successfully");
+      return true;
+    }
+
+    log("Task not unfulfillable: completion already exists");
+    return false;
   }
 }
 

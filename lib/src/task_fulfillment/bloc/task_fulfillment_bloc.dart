@@ -16,7 +16,9 @@ class TaskFulfillmentBloc
       log("Task fulfillment requested for task: ${event.task.title}");
       try {
         emit(TaskFulfillmentRequestInProgress());
-        bool success = await repository.attemptTaskFulfillment(event.task);
+        bool success = event.success
+            ? await repository.attemptTaskFulfillment(event.task)
+            : await repository.attemptTaskUnfulfillment(event.task);
         if (success) {
           emit(TaskFulfillmentRequestSuccessful(event.task));
         } else {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:routinepal/ui/app_pages/routine_fulfillment_page.dart';
 import 'package:routinepal_api/routinepal_api.dart';
 
 class FulfillableRoutineWidget extends StatelessWidget {
@@ -15,9 +16,12 @@ class FulfillableRoutineWidget extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: ListTile(
-          leading: const Icon(
-            Icons.light_mode_outlined,
-            size: 56,
+          leading: Hero(
+            tag: 'routine-${routine.id}-icon',
+            child: const Icon(
+              Icons.light_mode_outlined,
+              size: 56,
+            ),
           ),
           title: Text("Your ${routine.title} routine is ready!"),
           subtitle: Column(
@@ -27,7 +31,10 @@ class FulfillableRoutineWidget extends StatelessWidget {
               const Text("Your routine is ready to be fulfilled. Start now!"),
               FilledButton(
                   onPressed: () {
-                    //TODO: Implement action
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) =>
+                          RoutineFulfillmentPage(routine: routine),
+                    ));
                   },
                   child: const Text("Start routine"))
             ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:routinepal/utils.dart';
 import 'package:routinepal_manager/routinepal_manager.dart';
 
 class TaskWidget extends StatelessWidget {
@@ -27,13 +28,9 @@ class TaskWidget extends StatelessWidget {
       ),
       subtitle: Text(task.description),
       leading: Hero(
-        tag: 'task-${task.id}',
+        tag: 'task-${task.id}-icon',
         child: Icon(
-          switch (task.isFulfilled) {
-            true => Icons.check_circle,
-            false => Icons.error,
-            null => Icons.circle_outlined,
-          },
+          Utils.getTaskStatusIcon(task),
           size: 48,
         ),
       ),
