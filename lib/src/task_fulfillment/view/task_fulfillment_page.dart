@@ -9,8 +9,9 @@ import 'package:routinepal_manager/routinepal_manager.dart';
 
 class TaskFulfillmentPage extends StatefulWidget {
   final Task task;
+  final Task? parent;
 
-  const TaskFulfillmentPage(this.task, {super.key});
+  const TaskFulfillmentPage(this.task, {this.parent, super.key});
 
   @override
   State<TaskFulfillmentPage> createState() => _TaskFulfillmentPageState();
@@ -19,6 +20,8 @@ class TaskFulfillmentPage extends StatefulWidget {
 class _TaskFulfillmentPageState extends State<TaskFulfillmentPage> {
   late Task task;
   bool timerRunning = false;
+
+  bool get isSubtask => widget.parent != null;
 
   @override
   void initState() {
@@ -42,6 +45,7 @@ class _TaskFulfillmentPageState extends State<TaskFulfillmentPage> {
                 color: Colors.white,
                 fontSize: 2,
                 showSubtitle: false,
+                isSubtask: isSubtask,
               ),
             ),
           ),
@@ -55,13 +59,8 @@ class _TaskFulfillmentPageState extends State<TaskFulfillmentPage> {
           children: [
             if (!task.isGroup)
               ...buildGoalDescription()
-            else ...[
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-                child: Text("Tasks:"),
-              )
-              //TODO: Add list of tasks. Maybe building from a future will be required in order to fetch the tasks, or at least a bloc.
-            ],
+            else
+              ...buildSubtaskList(context),
             buildTimeLimitIndicators(),
             if (task.isFulfilled == fulfillable &&
                 (task.minDuration != null || task.maxDuration != null))
@@ -77,6 +76,47 @@ class _TaskFulfillmentPageState extends State<TaskFulfillmentPage> {
         ),
       ),
     );
+  }
+
+  List<Widget> buildSubtaskList(BuildContext context) {
+    return [
+      Padding(
+        padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+        child: Text("Tasks:"),
+      ),
+      FutureBuilder<List<Task>>(
+        future: RepositoryProvider.of<RoutinepalManager>(context)
+            .getTasksPartOfGroup(task.id),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.hasData && snapshot.data != null) {
+              return Column(
+                children: snapshot.data!
+                    .map((subTask) => TaskWidget(
+                          subTask,
+                          isSubtask: true,
+                          fontSize: 1.4,
+                          showSubtitle: true,
+                          onTaskTapped: () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (context) => TaskFulfillmentPage(
+                                      subTask,
+                                      parent: task))),
+                        ))
+                    .toList(),
+              );
+            } else {
+              return const Center(child: Text("No tasks found"));
+            }
+          } else if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else {
+            return const Center(child: Text("No tasks found"));
+          }
+        },
+      ),
+      //TODO: Add list of tasks. Maybe building from a future will be required in order to fetch the tasks, or at least a bloc.
+    ];
   }
 
   Row buildTimeLimitIndicators() {
