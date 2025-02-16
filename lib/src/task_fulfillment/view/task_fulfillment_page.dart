@@ -1,8 +1,7 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:routinepal/src/task_fulfillment/bloc/task_fulfillment_bloc.dart';
+import 'package:routinepal/ui/dialogs/fulfillment_confirmation_dialog.dart';
 import 'package:routinepal/ui/widgets/task_widget.dart';
 import 'package:routinepal/ui/app_pages/fulfillment_result_page.dart';
 import 'package:routinepal/src/task_fulfillment/view/timer_fulfillment_widget.dart';
@@ -38,7 +37,12 @@ class _TaskFulfillmentPageState extends State<TaskFulfillmentPage> {
             preferredSize: const Size.fromHeight(120),
             child: Padding(
               padding: const EdgeInsets.all(16.0),
-              child: TaskWidget(task, color: Colors.white, fontSize: 2),
+              child: TaskWidget(
+                task,
+                color: Colors.white,
+                fontSize: 2,
+                showSubtitle: false,
+              ),
             ),
           ),
           backgroundColor: task.isFulfilled == true
@@ -49,62 +53,16 @@ class _TaskFulfillmentPageState extends State<TaskFulfillmentPage> {
         ),
         body: ListView(
           children: [
-            const Padding(
-              padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
-              child: Text("Name of the goal:"),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text(
-                task.title,
-                textScaler: const TextScaler.linear(1.5),
-              ),
-            ),
-            if (!task.isGroup) ...[
-              const Padding(
-                padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
-                child: Text("Description:"),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  task.description,
-                  textScaler: const TextScaler.linear(1.5),
-                ),
-              ),
-            ] else ...[
+            if (!task.isGroup)
+              ...buildGoalDescription()
+            else ...[
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
                 child: Text("Tasks:"),
               )
               //TODO: Add list of tasks. Maybe building from a future will be required in order to fetch the tasks, or at least a bloc.
             ],
-            if (task.minDuration != null) ...[
-              const Padding(
-                padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
-                child: Text("Minimum duration:"),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  "${task.minDuration} minutes",
-                  textScaler: const TextScaler.linear(1.5),
-                ),
-              ),
-            ],
-            if (task.maxDuration != null) ...[
-              const Padding(
-                padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
-                child: Text("Maximum duration:"),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  "${task.maxDuration} minutes",
-                  textScaler: const TextScaler.linear(1.5),
-                ),
-              ),
-            ],
+            buildTimeLimitIndicators(),
             if (task.isFulfilled == fulfillable &&
                 (task.minDuration != null || task.maxDuration != null))
               TimerFulfillmentWidget(
@@ -119,6 +77,63 @@ class _TaskFulfillmentPageState extends State<TaskFulfillmentPage> {
         ),
       ),
     );
+  }
+
+  Row buildTimeLimitIndicators() {
+    return Row(
+      children: [
+        if (task.minDuration != null)
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Padding(
+                padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
+                child: Text("Minimum duration:"),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  "${task.minDuration} minutes",
+                  textScaler: const TextScaler.linear(1.5),
+                ),
+              ),
+            ],
+          ),
+        if (task.maxDuration != null)
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Padding(
+                padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
+                child: Text("Maximum duration:"),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  "${task.maxDuration} minutes",
+                  textScaler: const TextScaler.linear(1.5),
+                ),
+              ),
+            ],
+          ),
+      ],
+    );
+  }
+
+  List<Widget> buildGoalDescription() {
+    return [
+      const Padding(
+        padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
+        child: Text("The goal:"),
+      ),
+      Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Text(
+          task.description,
+          textScaler: const TextScaler.linear(1.5),
+        ),
+      ),
+    ];
   }
 
   void fulfillTask() {
@@ -158,24 +173,4 @@ class _TaskFulfillmentPageState extends State<TaskFulfillmentPage> {
       ),
     );
   }
-}
-
-Future<bool?> showFulfillmentAlertDialog(BuildContext context) {
-  return showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-            title: const Text('Fulfill Task?'),
-            content: const Text(
-                'Are you sure you want to mark this task as completed? Make sure you have met all conditions for fulfillment before proceeding. This action cannot be undone.'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                child: const Text('Cancel'),
-              ),
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(true),
-                child: const Text('Fulfill Task'),
-              ),
-            ],
-          ));
 }

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:routinepal/ui/dialogs/fulfillment_confirmation_dialog.dart';
 
 class TimerFulfillmentWidget extends StatefulWidget {
   final int? minDurationMinutes;
@@ -130,7 +131,8 @@ class _TimerFulfillmentWidgetState extends State<TimerFulfillmentWidget> {
 
   void startTimer() {
     if (!isRunning) {
-      timer = Timer.periodic(const Duration(seconds: 1),
+      //TODO: Change this later
+      timer = Timer.periodic(const Duration(milliseconds: 120),
           maxSeconds != 0 ? tickWhenMaxIsSet : tickWhenMaxIsNotSet);
     }
     setState(() {});
@@ -153,21 +155,27 @@ class _TimerFulfillmentWidgetState extends State<TimerFulfillmentWidget> {
     setState(() {});
   }
 
-  void cancelTimer() {
-    //TODO: Add a confirmation alert
-    timer?.cancel();
-    timer = null;
-    totalSecondsElapsed = 0;
-    widget.onFulfillmentFailed?.call();
-    setState(() {});
+  Future<void> cancelTimer() async {
+    bool isCancelConfirmed = await showFulfillmentAlertDialog(context,
+            isFulfillmentAttempted: false) ??
+        false;
+    if (isCancelConfirmed) {
+      timer?.cancel();
+      timer = null;
+      totalSecondsElapsed = 0;
+      widget.onFulfillmentFailed?.call();
+      setState(() {});
+    }
   }
 
-  void fulfilTask() {
-    timer?.cancel();
-    timer = null;
-    totalSecondsElapsed = 0;
-    widget.onFulfillmentSuccessful?.call();
-    setState(() {});
+  void fulfilTask() async {
+    if (await showFulfillmentAlertDialog(context) == true) {
+      timer?.cancel();
+      timer = null;
+      totalSecondsElapsed = 0;
+      widget.onFulfillmentSuccessful?.call();
+      setState(() {});
+    }
   }
 
   Color getColor() {

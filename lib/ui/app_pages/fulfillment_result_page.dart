@@ -80,10 +80,10 @@ class FulfillmentResultPage extends StatelessWidget {
                             width: MediaQuery.of(context).size.width * 0.8,
                             child: Text(
                               status
-                                  ? affirmingMessages[Random()
-                                      .nextInt(affirmingMessages.length)]
-                                  : encouragingMessages[Random()
-                                      .nextInt(encouragingMessages.length)],
+                                  ? successMessages[
+                                      Random().nextInt(successMessages.length)]
+                                  : failMessages[
+                                      Random().nextInt(failMessages.length)],
                               textAlign: TextAlign.center,
                               style: const TextStyle(
                                 color: Colors.white,
@@ -107,7 +107,7 @@ class FulfillmentResultPage extends StatelessWidget {
                               status ? Colors.green : Colors.red),
                         ),
                         onPressed: () {
-                          Navigator.pop(context);
+                          Navigator.popUntil(context, (route) => route.isFirst);
                         },
                         label: const Text('Close')),
                   ),
@@ -120,16 +120,16 @@ class FulfillmentResultPage extends StatelessWidget {
     );
   }
 
-  final List<String> affirmingMessages = [
+  final List<String> successMessages = [
     "Keep it up! Not a cent of it goes to waste!",
     "Every time you choose to do what is right, you grow in virtue, sincerity, honesty and strength. A small victory, but a blessing nonetheless!",
     "Good job! It might be simple, but keeping your word is even more important!",
-    "Keep it up! Consistency is key! Small steps means your journey lasts longer!"
+    "Keep it up! Consistency is key! Small steps every day means you're walking towards your goal!"
   ];
 
-  final List<String> encouragingMessages = [
+  final List<String> failMessages = [
     "It's okay to slip up sometimes, no one is perfect, do it only with the will to learn!",
-    "Don't be discouraged, it's okay, pick it back up the next time, and you're set off again",
-    "Although it hurts, we're not perfect! Use this to become stronger, and you'll get better!"
+    "Don't be discouraged, it's okay, pick it back up the next time, and you're off again",
+    "Although it hurts, we're not perfect! Use this oportunity to become stronger, and it will turn into a step forward!"
   ];
 }
