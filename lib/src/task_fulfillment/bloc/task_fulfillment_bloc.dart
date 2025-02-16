@@ -13,7 +13,7 @@ class TaskFulfillmentBloc
 
   TaskFulfillmentBloc(this.repository) : super(TaskFulfillmentInitial()) {
     on<TaskFulfillmentRequested>((event, emit) async {
-      log("Task fulfillment requested for task: ${event.task.title}");
+      log("INFO: Task fulfillment update requested for task: ${event.task.title} with status ${event.success}");
       try {
         emit(TaskFulfillmentRequestInProgress());
         bool success = event.success
@@ -25,7 +25,7 @@ class TaskFulfillmentBloc
           emit(TaskFulfillmentRequestFailed(event.task));
         }
       } catch (e) {
-        log("Error when requesting task fulfillment: $e");
+        log("EXCEPTION: Error when requesting task fulfillment: $e");
         emit(TaskFulfillmentRequestFailed(event.task));
       }
     });

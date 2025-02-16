@@ -6,6 +6,7 @@ final class RoutineListRequested extends FulfillableRoutinesEvent {}
 
 final class RoutineFulfillmentCancelled extends FulfillableRoutinesEvent {
   List<api.Task> tasksRemaining;
+  int routineTaskGroupId;
 
-  RoutineFulfillmentCancelled(this.tasksRemaining);
+  RoutineFulfillmentCancelled(this.tasksRemaining, this.routineTaskGroupId);
 }

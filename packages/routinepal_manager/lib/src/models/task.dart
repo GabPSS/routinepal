@@ -9,6 +9,7 @@ class Task extends Equatable {
   final int totalTasks;
   final int completedTasks;
   final bool? isFulfilled;
+  final int? parentGroupId;
 
   const Task({
     required this.id,
@@ -16,14 +17,14 @@ class Task extends Equatable {
     String? description,
     this.minDuration,
     this.maxDuration,
+    required this.parentGroupId,
     required this.totalTasks,
     required this.isFulfilled,
     required this.completedTasks,
   }) : description = description ?? "$completedTasks of $totalTasks completed";
 
-  const Task.mock(this.id)
-      : title = "",
-        description = "",
+  const Task.mock(this.id, this.title, this.parentGroupId)
+      : description = "",
         minDuration = null,
         maxDuration = null,
         totalTasks = 0,
@@ -41,6 +42,7 @@ class Task extends Equatable {
         totalTasks: totalTasks,
         isFulfilled: true,
         completedTasks: totalTasks,
+        parentGroupId: parentGroupId,
       );
 
   Task get unfulfilled => Task(
@@ -52,6 +54,7 @@ class Task extends Equatable {
         totalTasks: totalTasks,
         isFulfilled: false,
         completedTasks: completedTasks,
+        parentGroupId: parentGroupId,
       );
 
   @override

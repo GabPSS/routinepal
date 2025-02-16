@@ -83,6 +83,13 @@ class RoutinepalSqliteDb implements RoutinepalApi {
             'task_group_id': 2
           });
 
+          db.insert('tasks', {
+            'title': 'Stretch',
+            'description': 'Stretch your muscles',
+            'maximum_duration_min': 10,
+            'task_group_id': 2
+          });
+
           db.insert('task_groups', {'name': 'Morning Routine'});
 
           db.insert('routines', {
@@ -313,12 +320,8 @@ class RoutinepalSqliteDb implements RoutinepalApi {
   }
 
   @override
-  Future<Routine?> isTaskGroupPartOfRoutine(int groupId) =>
-      isTaskGroupPartOfRoutine(groupId);
-
-  @override
-  Future<Routine?> isTaskPartOfRoutine(int taskId) async {
-    var query = await _db!.query('routines', where: 'task_group_id = $taskId');
+  Future<Routine?> isTaskGroupPartOfRoutine(int groupId) async {
+    var query = await _db!.query('routines', where: 'task_group_id = $groupId');
 
     if (query.isNotEmpty) {
       return _buildRoutineFromData(query[0], _db!);

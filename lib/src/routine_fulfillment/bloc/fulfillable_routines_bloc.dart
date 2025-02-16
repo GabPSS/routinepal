@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
 import 'package:routinepal_api/routinepal_api.dart' as api;
 import 'package:routinepal_manager/routinepal_manager.dart' as mgr;
@@ -14,8 +16,10 @@ class FulfillableRoutinesBloc
     on<FulfillableRoutinesEvent>((event, emit) async {
       try {
         if (event is RoutineFulfillmentCancelled) {
+          log("INFO: Current routine fulfillment cancelled. Unfulfilling tasks.");
           for (var task in event.tasksRemaining) {
-            await repository.attemptTaskUnfulfillment(mgr.Task.mock(task.id));
+            await repository.attemptTaskUnfulfillment(
+                mgr.Task.mock(task.id, task.title, event.routineTaskGroupId));
           }
         }
 

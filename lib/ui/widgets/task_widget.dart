@@ -4,6 +4,7 @@ import 'package:routinepal_manager/routinepal_manager.dart';
 
 class TaskWidget extends StatelessWidget {
   final Task task;
+  final bool isSubtask;
   final Color? color;
   final double? fontSize;
   final Function()? onTaskTapped;
@@ -15,6 +16,7 @@ class TaskWidget extends StatelessWidget {
     this.onTaskTapped,
     this.fontSize,
     this.showSubtitle = true,
+    this.isSubtask = false,
     super.key,
   });
 
@@ -30,7 +32,7 @@ class TaskWidget extends StatelessWidget {
       ),
       subtitle: showSubtitle ? Text(task.description) : null,
       leading: Hero(
-        tag: 'task-${task.id}-icon',
+        tag: '${isSubtask ? 'sub' : ''}task-${task.id}-icon',
         child: Icon(
           Utils.getTaskStatusIcon(task),
           size: 48,

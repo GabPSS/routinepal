@@ -49,8 +49,9 @@ class _RoutineFulfillmentPageState extends State<RoutineFulfillmentPage> {
           if (tasksRemaining.isNotEmpty &&
               await showCancelAlert(context) == true &&
               context.mounted) {
-            BlocProvider.of<FulfillableRoutinesBloc>(context)
-                .add(RoutineFulfillmentCancelled(tasksRemaining));
+            BlocProvider.of<FulfillableRoutinesBloc>(context).add(
+                RoutineFulfillmentCancelled(
+                    tasksRemaining, widget.routine.taskGroupId));
             Navigator.pushReplacement(context,
                 MaterialPageRoute(builder: (context) {
               return FulfillmentResultPage(
@@ -179,6 +180,7 @@ class _RoutineFulfillmentPageState extends State<RoutineFulfillmentPage> {
                   ? "All tasks finished!"
                   : "$unfulfilledTasks of $totalTasks tasks not completed...",
               textScaler: const TextScaler.linear(2),
+              textAlign: TextAlign.center,
             ),
             const Spacer(),
             Padding(
@@ -294,8 +296,10 @@ class _RoutineFulfillmentPageState extends State<RoutineFulfillmentPage> {
 
   void markTaskFulfillment(bool status) {
     if (!status) unfulfilledTasks++;
-    BlocProvider.of<TaskFulfillmentBloc>(context)
-        .add(TaskFulfillmentRequested(mgr.Task.mock(currentTask.id), status));
+    BlocProvider.of<TaskFulfillmentBloc>(context).add(TaskFulfillmentRequested(
+        mgr.Task.mock(
+            currentTask.id, currentTask.title, widget.routine.taskGroupId),
+        status));
   }
 
   void nextPage([bool skipped = false]) {

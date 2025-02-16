@@ -51,6 +51,7 @@ class RoutinepalManager {
         totalTasks: group.tasks.length,
         completedTasks: groupTaskCompletions.fulfilled.length,
         isFulfilled: group.tasks.getStatus(groupTaskCompletions),
+        parentGroupId: group.id,
       ));
     }
 
@@ -65,16 +66,17 @@ class RoutinepalManager {
         totalTasks: 1,
         completedTasks: completion != null && completion.isFulfilled ? 1 : 0,
         isFulfilled: completion?.isFulfilled,
+        parentGroupId: null,
       ));
     }
 
     return result;
   }
 
-  /// Obtains a list of all tasks part of a group with id [id].
-  Future<List<models.Task>> getTasksPartOfGroup(int id,
+  /// Obtains a list of all tasks part of a group with id [groupId].
+  Future<List<models.Task>> getTasksPartOfGroup(int groupId,
       [DateTime? date]) async {
-    var group = await api.getTasksPartOfGroup(id);
+    var group = await api.getTasksPartOfGroup(groupId);
     List<models.Task> result = [];
 
     for (var task in group) {
@@ -87,6 +89,7 @@ class RoutinepalManager {
         minDuration: task.minDuration,
         maxDuration: task.maxDuration,
         isFulfilled: possibleCompletion?.isFulfilled,
+        parentGroupId: groupId,
         totalTasks: 1,
         completedTasks: possibleCompletion?.isFulfilled == true ? 1 : 0,
       ));
@@ -121,29 +124,33 @@ class RoutinepalManager {
     if (isFulfillable) {
       // Check Routine not fulfillable
       api_lib.Routine? routine;
-      if (!task.isGroup) {
-        routine = await api.isTaskPartOfRoutine(task.id);
-      } else {
-        routine = await api.isTaskGroupPartOfRoutine(task.id);
+
+      if (task.parentGroupId != null) {
+        routine = await api.isTaskGroupPartOfRoutine(task.parentGroupId!);
       }
 
       if (routine != null) {
-        isFulfillable =
-            routine.fulfillmentTime.isWithin(TimeOfDay.now(), toleranceMins);
-        log("Task part of ${isFulfillable ? "" : "un"}fulfillable routine");
+        isFulfillable = true;
+        //TODO: Uncomment when deploying
+        // isFulfillable =
+        //     routine.fulfillmentTime.isWithin(TimeOfDay.now(), toleranceMins);
+        log("Task part of ${isFulfillable ? "" : "un"}fulfillable routine ${routine.title}");
       }
     }
 
     // Task fulfillment
     if (isFulfillable) {
       api.recordTaskFulfillment(task.id, true);
-      log("Task fulfilled successfully");
+      log("INFO: Task fulfilled successfully");
+    } else {
+      log("WARNING: Task not fulfillable");
     }
 
     return isFulfillable;
   }
 
   Future<bool> attemptTaskUnfulfillment(models.Task task) async {
+    log("Manager: Task unfulfillment requested for task ${task.id} with title ${task.title} part of group ${task.parentGroupId}");
     var taskCompletion = (await api.getTaskCompletionsForDate(DateTime.now()))
         .where((completion) => completion.task.id == task.id)
         .singleOrNull;

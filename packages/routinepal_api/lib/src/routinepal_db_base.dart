@@ -19,8 +19,6 @@ abstract class RoutinepalApi {
   /// Fetches all routines from the database.
   Future<List<Routine>> getRoutines();
 
-  Future<Routine?> isTaskPartOfRoutine(int taskId);
-
   Future<Routine?> isTaskGroupPartOfRoutine(int groupId);
 
   /// Fetches a certain routine with id [routineId] from the database.

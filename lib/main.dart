@@ -13,13 +13,16 @@ Future<void> main() async {
   RoutinepalManager manager = RoutinepalManager(RoutinepalSqliteDb());
   await manager.init();
 
-  runApp(MultiBlocProvider(
-    providers: [
-      BlocProvider(create: (context) => FulfillableRoutinesBloc(manager)),
-      BlocProvider(create: (context) => TaskOverviewBloc(manager)),
-      BlocProvider(create: (context) => TaskFulfillmentBloc(manager)),
-    ],
-    child: const MainApp(),
+  runApp(RepositoryProvider(
+    create: (context) => manager,
+    child: MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => FulfillableRoutinesBloc(manager)),
+        BlocProvider(create: (context) => TaskOverviewBloc(manager)),
+        BlocProvider(create: (context) => TaskFulfillmentBloc(manager)),
+      ],
+      child: const MainApp(),
+    ),
   ));
 }
 

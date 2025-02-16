@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:routinepal/ui/dialogs/fulfillment_confirmation_dialog.dart';
 
@@ -78,8 +79,8 @@ class _TimerFulfillmentWidgetState extends State<TimerFulfillmentWidget> {
             alignment: Alignment.center,
             children: [
               SizedBox(
-                width: MediaQuery.of(context).size.width - 128,
-                height: MediaQuery.of(context).size.width - 128,
+                width: min(MediaQuery.of(context).size.width - 128, 350),
+                height: min(MediaQuery.of(context).size.width - 128, 350),
                 child: CircularProgressIndicator(
                   strokeWidth: 5,
                   strokeCap: StrokeCap.round,
