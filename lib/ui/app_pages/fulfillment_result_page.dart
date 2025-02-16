@@ -101,7 +101,8 @@ class FulfillmentResultPage extends StatelessWidget {
                         style: ButtonStyle(
                           iconColor: WidgetStatePropertyAll(
                               status ? Colors.green : Colors.red),
-                          backgroundColor: WidgetStatePropertyAll(Colors.white),
+                          backgroundColor:
+                              const WidgetStatePropertyAll(Colors.white),
                           foregroundColor: WidgetStatePropertyAll(
                               status ? Colors.green : Colors.red),
                         ),

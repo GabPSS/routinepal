@@ -29,6 +29,9 @@ abstract class RoutinepalApi {
   /// Fetches all task completion information for a certain [date].
   Future<List<TaskCompletion>> getTaskCompletionsForDate(DateTime date);
 
+  /// Fetches all task completions for a certain task with id [taskId] on a certain [date].
+  Future<TaskCompletion?> getSingleTaskCompletion(int taskId, DateTime date);
+
   /// Creates an entry in `task_completions` for a task with id [taskId].
   Future<void> recordTaskFulfillment(int taskId, bool isFulfilled);
 }

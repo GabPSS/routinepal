@@ -1,0 +1,65 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "routinepal",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "routinepal (profile mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "routinepal (release mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "routinepal_api",
+            "cwd": "packages\\routinepal_api",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "routinepal_api (profile mode)",
+            "cwd": "packages\\routinepal_api",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "routinepal_api (release mode)",
+            "cwd": "packages\\routinepal_api",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "routinepal_manager",
+            "cwd": "packages\\routinepal_manager",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "routinepal_manager (profile mode)",
+            "cwd": "packages\\routinepal_manager",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "routinepal_manager (release mode)",
+            "cwd": "packages\\routinepal_manager",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        }
+    ]
+}

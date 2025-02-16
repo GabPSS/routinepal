@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:routinepal/src/task_overview/bloc/task_overview_bloc.dart';
-import 'package:routinepal/src/task_overview/ui/task_widget.dart';
-import 'package:routinepal/ui/app_pages/task_fulfillment_page.dart';
+import 'package:routinepal/ui/widgets/task_widget.dart';
+import 'package:routinepal/src/task_fulfillment/view/task_fulfillment_page.dart';
 
 class TaskOverviewWidget extends StatelessWidget {
   const TaskOverviewWidget({super.key});

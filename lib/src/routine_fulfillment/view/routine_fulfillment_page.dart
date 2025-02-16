@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:routinepal/src/fulfillable_routines/bloc/fulfillable_routines_bloc.dart';
+import 'package:routinepal/src/routine_fulfillment/bloc/fulfillable_routines_bloc.dart';
 import 'package:routinepal/src/task_fulfillment/bloc/task_fulfillment_bloc.dart';
 import 'package:routinepal/ui/app_pages/fulfillment_result_page.dart';
-import 'package:routinepal/ui/widgets/timer_fulfillment_widget.dart';
+import 'package:routinepal/src/task_fulfillment/view/timer_fulfillment_widget.dart';
 import 'package:routinepal_api/routinepal_api.dart';
 import 'package:routinepal_manager/routinepal_manager.dart' as mgr;
 
@@ -89,12 +89,12 @@ class _RoutineFulfillmentPageState extends State<RoutineFulfillmentPage> {
                   onPressed: () {
                     Navigator.pop(context, false);
                   },
-                  child: Text('Cancel')),
+                  child: const Text('Cancel')),
               TextButton(
                   onPressed: () {
                     Navigator.pop(context, true);
                   },
-                  child: Text('Quit')),
+                  child: const Text('Quit')),
             ],
           );
         });
@@ -114,14 +114,14 @@ class _RoutineFulfillmentPageState extends State<RoutineFulfillmentPage> {
                     children: [
                       Hero(
                         tag: 'routine-${widget.routine.id}-icon',
-                        child: Icon(
+                        child: const Icon(
                           Icons.light_mode_outlined,
                           size: 128,
                         ),
                       ),
                       Text(
                         "Welcome to your ${widget.routine.title} routine!",
-                        textScaler: TextScaler.linear(2),
+                        textScaler: const TextScaler.linear(2),
                         textAlign: TextAlign.center,
                       ),
                       const Text(
@@ -151,7 +151,8 @@ class _RoutineFulfillmentPageState extends State<RoutineFulfillmentPage> {
               children: [
                 Expanded(
                     child: FilledButton(
-                        onPressed: nextPage, child: Text("Let's start!"))),
+                        onPressed: nextPage,
+                        child: const Text("Let's start!"))),
               ],
             ),
           )
@@ -163,7 +164,7 @@ class _RoutineFulfillmentPageState extends State<RoutineFulfillmentPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Spacer(),
+            const Spacer(),
             Hero(
               tag: 'routine-${widget.routine.id}-icon',
               child: Icon(
@@ -177,9 +178,9 @@ class _RoutineFulfillmentPageState extends State<RoutineFulfillmentPage> {
               unfulfilledTasks == 0
                   ? "All tasks finished!"
                   : "$unfulfilledTasks of $totalTasks tasks not completed...",
-              textScaler: TextScaler.linear(2),
+              textScaler: const TextScaler.linear(2),
             ),
-            Spacer(),
+            const Spacer(),
             Padding(
               padding: const EdgeInsets.all(24.0),
               child: Row(
@@ -199,7 +200,7 @@ class _RoutineFulfillmentPageState extends State<RoutineFulfillmentPage> {
                             );
                           }));
                         },
-                        child: Text("Finish routine")),
+                        child: const Text("Finish routine")),
                   ),
                 ],
               ),
@@ -212,7 +213,7 @@ class _RoutineFulfillmentPageState extends State<RoutineFulfillmentPage> {
         children: [
           Text(
               "${tasksRemaining.length} task${tasksRemaining.length != 1 ? 's' : ''} remaining"),
-          Spacer(),
+          const Spacer(),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Card.outlined(
@@ -223,11 +224,11 @@ class _RoutineFulfillmentPageState extends State<RoutineFulfillmentPage> {
                     Icons.circle_outlined,
                     size: 64,
                   ),
-                  title:
-                      Text(currentTask.title, textScaler: TextScaler.linear(2)),
+                  title: Text(currentTask.title,
+                      textScaler: const TextScaler.linear(2)),
                   subtitle: Text(
                     currentTask.description,
-                    textScaler: TextScaler.linear(1.2),
+                    textScaler: const TextScaler.linear(1.2),
                   ),
                 ),
               ),
@@ -252,7 +253,7 @@ class _RoutineFulfillmentPageState extends State<RoutineFulfillmentPage> {
                 });
               },
             ),
-          Spacer(),
+          const Spacer(),
           Padding(
             padding: const EdgeInsets.all(24.0),
             child: Column(
@@ -266,7 +267,7 @@ class _RoutineFulfillmentPageState extends State<RoutineFulfillmentPage> {
                             onPressed: () {
                               nextPage(true);
                             },
-                            child: Text("Skip")),
+                            child: const Text("Skip")),
                       ),
                     ],
                   ),
@@ -279,7 +280,7 @@ class _RoutineFulfillmentPageState extends State<RoutineFulfillmentPage> {
                               markTaskFulfillment(true);
                               nextPage();
                             },
-                            child: Text("Complete")),
+                            child: const Text("Complete")),
                       ),
                     ],
                   ),

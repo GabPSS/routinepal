@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:routinepal/ui/app_pages/history_page.dart';
+import 'package:routinepal/src/history/view/history_page.dart';
 import 'package:routinepal/ui/app_pages/home_page.dart';
 import 'package:routinepal/ui/app_pages/routines_page.dart';
 import 'package:routinepal/ui/app_pages/tasks_page.dart';

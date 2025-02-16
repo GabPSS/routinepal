@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:routinepal/src/task_fulfillment/bloc/task_fulfillment_bloc.dart';
-import 'package:routinepal/src/task_overview/ui/task_widget.dart';
+import 'package:routinepal/ui/widgets/task_widget.dart';
 import 'package:routinepal/ui/app_pages/fulfillment_result_page.dart';
-import 'package:routinepal/ui/widgets/timer_fulfillment_widget.dart';
+import 'package:routinepal/src/task_fulfillment/view/timer_fulfillment_widget.dart';
 import 'package:routinepal_manager/routinepal_manager.dart';
 
 class TaskFulfillmentPage extends StatefulWidget {
@@ -72,6 +72,12 @@ class _TaskFulfillmentPageState extends State<TaskFulfillmentPage> {
                   textScaler: const TextScaler.linear(1.5),
                 ),
               ),
+            ] else ...[
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                child: Text("Tasks:"),
+              )
+              //TODO: Add list of tasks. Maybe building from a future will be required in order to fetch the tasks, or at least a bloc.
             ],
             if (task.minDuration != null) ...[
               const Padding(

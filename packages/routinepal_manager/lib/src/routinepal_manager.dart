@@ -71,6 +71,30 @@ class RoutinepalManager {
     return result;
   }
 
+  /// Obtains a list of all tasks part of a group with id [id].
+  Future<List<models.Task>> getTasksPartOfGroup(int id,
+      [DateTime? date]) async {
+    var group = await api.getTasksPartOfGroup(id);
+    List<models.Task> result = [];
+
+    for (var task in group) {
+      var possibleCompletion =
+          await api.getSingleTaskCompletion(task.id, date ?? DateTime.now());
+      result.add(models.Task(
+        id: task.id,
+        title: task.title,
+        description: task.description,
+        minDuration: task.minDuration,
+        maxDuration: task.maxDuration,
+        isFulfilled: possibleCompletion?.isFulfilled,
+        totalTasks: 1,
+        completedTasks: possibleCompletion?.isFulfilled == true ? 1 : 0,
+      ));
+    }
+
+    return result;
+  }
+
   /// Filters a set of TaskCompletions according to a list of tasks.
   List<api_lib.TaskCompletion> taskCompletionsFor(
       List<api_lib.Task> tasks, List<api_lib.TaskCompletion> completions) {

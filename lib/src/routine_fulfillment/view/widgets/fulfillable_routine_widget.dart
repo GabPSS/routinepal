@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:routinepal/ui/app_pages/routine_fulfillment_page.dart';
+import 'package:routinepal/src/routine_fulfillment/view/routine_fulfillment_page.dart';
 import 'package:routinepal_api/routinepal_api.dart';
 
 class FulfillableRoutineWidget extends StatelessWidget {

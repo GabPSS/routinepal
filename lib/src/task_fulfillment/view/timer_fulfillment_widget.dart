@@ -89,7 +89,7 @@ class _TimerFulfillmentWidgetState extends State<TimerFulfillmentWidget> {
               ),
               Text(
                 timeText,
-                textScaler: TextScaler.linear(3),
+                textScaler: const TextScaler.linear(3),
               ),
             ],
           ),
@@ -103,21 +103,23 @@ class _TimerFulfillmentWidgetState extends State<TimerFulfillmentWidget> {
               if (!isRunning)
                 FilledButton.icon(
                   onPressed: startTimer,
-                  icon: Icon(Icons.directions_run),
+                  icon: const Icon(Icons.directions_run),
                   label:
                       const Text('Start', textScaler: TextScaler.linear(1.5)),
                 ),
               if (isRunning)
                 FilledButton.tonalIcon(
                   onPressed: cancelTimer,
-                  icon: Icon(Icons.cancel),
-                  label: Text("Cancel", textScaler: TextScaler.linear(1.5)),
+                  icon: const Icon(Icons.cancel),
+                  label:
+                      const Text("Cancel", textScaler: TextScaler.linear(1.5)),
                 ),
               if (isRunning && isFulfillable)
                 FilledButton.icon(
                   onPressed: fulfilTask,
-                  icon: Icon(Icons.check),
-                  label: Text("Fulfill", textScaler: TextScaler.linear(1.5)),
+                  icon: const Icon(Icons.check),
+                  label:
+                      const Text("Fulfill", textScaler: TextScaler.linear(1.5)),
                 ),
             ],
           ),

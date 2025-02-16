@@ -7,12 +7,14 @@ class TaskWidget extends StatelessWidget {
   final Color? color;
   final double? fontSize;
   final Function()? onTaskTapped;
+  final bool showSubtitle;
 
   const TaskWidget(
     this.task, {
     this.color,
     this.onTaskTapped,
     this.fontSize,
+    this.showSubtitle = true,
     super.key,
   });
 
@@ -26,7 +28,7 @@ class TaskWidget extends StatelessWidget {
         task.title,
         textScaler: TextScaler.linear(fontSize ?? 1),
       ),
-      subtitle: Text(task.description),
+      subtitle: showSubtitle ? Text(task.description) : null,
       leading: Hero(
         tag: 'task-${task.id}-icon',
         child: Icon(

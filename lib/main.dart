@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:routinepal/src/fulfillable_routines/bloc/fulfillable_routines_bloc.dart';
+import 'package:routinepal/src/routine_fulfillment/bloc/fulfillable_routines_bloc.dart';
 import 'package:routinepal/src/task_fulfillment/bloc/task_fulfillment_bloc.dart';
 import 'package:routinepal/src/task_overview/bloc/task_overview_bloc.dart';
 import 'package:routinepal/ui/app_screen.dart';

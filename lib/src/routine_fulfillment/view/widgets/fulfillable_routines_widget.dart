@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:routinepal/src/fulfillable_routines/bloc/fulfillable_routines_bloc.dart';
-import 'package:routinepal/src/fulfillable_routines/ui/all_routines_fulfilled_widget.dart';
-import 'package:routinepal/src/fulfillable_routines/ui/fulfillable_routine_widget.dart';
+import 'package:routinepal/src/routine_fulfillment/bloc/fulfillable_routines_bloc.dart';
+import 'package:routinepal/src/routine_fulfillment/view/widgets/all_routines_fulfilled_widget.dart';
+import 'package:routinepal/src/routine_fulfillment/view/widgets/fulfillable_routine_widget.dart';
 
 class FulfillableRoutinesWidget extends StatelessWidget {
   const FulfillableRoutinesWidget({

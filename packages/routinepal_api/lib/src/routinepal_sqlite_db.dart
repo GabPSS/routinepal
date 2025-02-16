@@ -336,6 +336,25 @@ class RoutinepalSqliteDb implements RoutinepalApi {
       'is_completed': isFulfilled ? 1 : 0,
     });
   }
+
+  @override
+  Future<TaskCompletion?> getSingleTaskCompletion(int taskId, DateTime date,
+      [Task? task]) async {
+    var completions = await _db!.query('task_completions',
+        where:
+            'task_id = $taskId AND completion_date = \'${DbUtils.formatSqlDate(date)}\'');
+
+    if (completions.isNotEmpty) {
+      return TaskCompletion(
+        task: task ?? (await getTask(taskId)) ?? Task.mock(taskId),
+        completionTime:
+            DbUtils.parseSqlTime(completions[0]['completion_time'] as String),
+        isFulfilled: (completions[0]['is_completed'] as int) == 1,
+      );
+    }
+
+    return null;
+  }
 }
 
 final class DbUtils {
