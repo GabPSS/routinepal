@@ -5,10 +5,10 @@ abstract class RoutinepalApi {
   Future<void> init();
 
   /// Fetches a certain task with id [taskId] from the database.
-  Future<Task?> getTask(int taskId);
+  Future<TaskBase?> getTask(int taskId);
 
   /// Creates a new task with the given data.
-  Future<int?> createTask(Task task, [int? groupId]);
+  Future<int?> createTask(TaskBase task, [int? groupId]);
 
   /// Creates a new task group with the given [name].
   Future<int?> createTaskGroup(String name);
@@ -17,10 +17,10 @@ abstract class RoutinepalApi {
   Future<void> assignTaskToGroup(int taskId, int groupId);
 
   /// Fetches all tasks part of a [TaskGroup] with id [groupId].
-  Future<List<Task>> getTasksPartOfGroup(int groupId);
+  Future<List<TaskBase>> getTasksPartOfGroup(int groupId);
 
   /// Fetches all tasks not part of groups.
-  Future<List<Task>> getLooseTasks();
+  Future<List<TaskBase>> getLooseTasks();
 
   /// Fetches all task groups which are not routines.
   Future<List<TaskGroup>> getNonRoutineTaskGroups();

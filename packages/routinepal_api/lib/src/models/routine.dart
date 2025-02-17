@@ -6,7 +6,7 @@ import 'task.dart';
 class Routine {
   final int id;
   final int taskGroupId;
-  final List<Task> tasks;
+  final List<TaskBase> tasks;
   final String title;
   final TimeOfDay fulfillmentTime;
 

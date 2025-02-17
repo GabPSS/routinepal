@@ -1,13 +1,13 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:routinepal_api/routinepal_api.dart' as api_lib;
-import 'package:routinepal_manager/src/models/models.dart' as models;
+import 'package:routinepal_api/routinepal_api.dart';
+import 'package:routinepal_manager/routinepal_manager.dart';
 
 const Null fulfillable = null;
 
 class RoutinepalManager {
-  final api_lib.RoutinepalApi api;
+  final RoutinepalApi api;
   int toleranceMins = 15;
 
   RoutinepalManager(this.api);
@@ -19,7 +19,7 @@ class RoutinepalManager {
   /// Obtains a list of all routines that can be fulfilled at the current time.
   ///
   /// A routine is considered fulfillable if all of its tasks have been completed and the current time is within [toleranceMins] minutes of the routine's fulfillment time.
-  Future<List<api_lib.Routine>> getFulfillableRoutines() async {
+  Future<List<Routine>> getFulfillableRoutines() async {
     var routines = await api.getRoutines();
     var taskCompletions = (await api.getTaskCompletionsForDate(DateTime.now()));
 
@@ -35,17 +35,17 @@ class RoutinepalManager {
   }
 
   /// Obtains a list of all tasks and their statuses for the date [date].
-  Future<List<models.Task>> getTasksFor(DateTime date) async {
-    List<api_lib.TaskCompletion> taskCompletions =
+  Future<List<Task>> getTasksFor(DateTime date) async {
+    List<TaskCompletion> taskCompletions =
         await api.getTaskCompletionsForDate(date);
     var taskGroups = await api.getNonRoutineTaskGroups();
     var looseTasks = await api.getLooseTasks();
 
-    List<models.Task> result = [];
+    List<Task> result = [];
 
     for (var group in taskGroups) {
       var groupTaskCompletions = taskCompletions.allFor(group.tasks);
-      result.add(models.Task(
+      result.add(Task(
         id: group.id,
         title: group.name,
         totalTasks: group.tasks.length,
@@ -57,7 +57,7 @@ class RoutinepalManager {
 
     for (var task in looseTasks) {
       var completion = taskCompletions.forTask(task);
-      result.add(models.Task(
+      result.add(Task(
         id: task.id,
         title: task.title,
         description: task.description,
@@ -74,15 +74,14 @@ class RoutinepalManager {
   }
 
   /// Obtains a list of all tasks part of a group with id [groupId].
-  Future<List<models.Task>> getTasksPartOfGroup(int groupId,
-      [DateTime? date]) async {
+  Future<List<Task>> getTasksPartOfGroup(int groupId, [DateTime? date]) async {
     var group = await api.getTasksPartOfGroup(groupId);
-    List<models.Task> result = [];
+    List<Task> result = [];
 
     for (var task in group) {
       var possibleCompletion =
           await api.getSingleTaskCompletion(task.id, date ?? DateTime.now());
-      result.add(models.Task(
+      result.add(Task(
         id: task.id,
         title: task.title,
         description: task.description,
@@ -99,14 +98,14 @@ class RoutinepalManager {
   }
 
   /// Filters a set of TaskCompletions according to a list of tasks.
-  List<api_lib.TaskCompletion> taskCompletionsFor(
-      List<api_lib.Task> tasks, List<api_lib.TaskCompletion> completions) {
+  List<TaskCompletion> taskCompletionsFor(
+      List<TaskBase> tasks, List<TaskCompletion> completions) {
     return completions
         .where((completion) => tasks.contains(completion.task))
         .toList();
   }
 
-  Future<bool> attemptTaskFulfillment(models.Task task) async {
+  Future<bool> attemptTaskFulfillment(Task task) async {
     bool isFulfillable = true;
 
     if (isFulfillable) {
@@ -123,7 +122,7 @@ class RoutinepalManager {
 
     if (isFulfillable) {
       // Check Routine not fulfillable
-      api_lib.Routine? routine;
+      Routine? routine;
 
       if (task.parentGroupId != null) {
         routine = await api.isTaskGroupPartOfRoutine(task.parentGroupId!);
@@ -149,7 +148,7 @@ class RoutinepalManager {
     return isFulfillable;
   }
 
-  Future<bool> attemptTaskUnfulfillment(models.Task task) async {
+  Future<bool> attemptTaskUnfulfillment(Task task) async {
     log("Manager: Task unfulfillment requested for task ${task.id} with title ${task.title} part of group ${task.parentGroupId}");
     var taskCompletion = (await api.getTaskCompletionsForDate(DateTime.now()))
         .where((completion) => completion.task.id == task.id)
@@ -165,8 +164,8 @@ class RoutinepalManager {
     return false;
   }
 
-  Future<void> createTask(models.Task task) async {
-    var newTask = api_lib.Task(
+  Future<void> createTask(Task task) async {
+    var newTask = TaskBase(
       title: task.title,
       description: task.description,
       minDuration: task.minDuration,
@@ -178,19 +177,19 @@ class RoutinepalManager {
   }
 }
 
-extension on Iterable<api_lib.TaskCompletion> {
-  Iterable<api_lib.TaskCompletion> allFor(List<api_lib.Task> tasks) =>
+extension on Iterable<TaskCompletion> {
+  Iterable<TaskCompletion> allFor(List<TaskBase> tasks) =>
       where((completion) => tasks.contains(completion.task));
 
-  api_lib.TaskCompletion? forTask(api_lib.Task task) =>
+  TaskCompletion? forTask(TaskBase task) =>
       where((completion) => completion.task == task).singleOrNull;
 
-  Iterable<api_lib.TaskCompletion> get fulfilled =>
+  Iterable<TaskCompletion> get fulfilled =>
       where((completion) => completion.isFulfilled);
 }
 
-extension on Iterable<api_lib.Task> {
-  bool? getStatus(Iterable<api_lib.TaskCompletion> completions) {
+extension on Iterable<TaskBase> {
+  bool? getStatus(Iterable<TaskCompletion> completions) {
     bool? isFulfilled;
 
     bool thereIsAnyFailedTask =

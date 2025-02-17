@@ -1,14 +1,14 @@
 import 'package:equatable/equatable.dart';
 
 /// A basic task model class
-class Task extends Equatable {
+class TaskBase extends Equatable {
   final int id;
   final String title;
   final String description;
   final int? minDuration;
   final int? maxDuration;
 
-  const Task({
+  const TaskBase({
     required this.id,
     required this.title,
     required this.description,
@@ -16,7 +16,7 @@ class Task extends Equatable {
     required this.maxDuration,
   });
 
-  const Task.mock(this.id)
+  const TaskBase.mock(this.id)
       : title = '',
         description = '',
         minDuration = null,

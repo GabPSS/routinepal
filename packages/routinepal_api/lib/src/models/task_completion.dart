@@ -7,7 +7,7 @@ import 'package:routinepal_api/src/models/task.dart';
 ///
 /// If a task was neither fulfilled nor failed, the [TaskCompletion] entry for that day should not exist for the task.
 class TaskCompletion {
-  final Task task;
+  final TaskBase task;
   final TimeOfDay completionTime;
   final bool isFulfilled;
 

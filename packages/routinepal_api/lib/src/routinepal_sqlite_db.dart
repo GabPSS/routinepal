@@ -173,12 +173,12 @@ class RoutinepalSqliteDb implements RoutinepalApi {
   }
 
   @override
-  Future<Task?> getTask(int taskId) async {
+  Future<TaskBase?> getTask(int taskId) async {
     List<Map<String, dynamic>> results =
         await _db!.query('tasks', where: 'task_id = $taskId');
 
     if (results.isNotEmpty) {
-      return Task(
+      return TaskBase(
         id: results[0]['task_id'],
         title: results[0]['title'],
         description: results[0]['description'],
@@ -191,7 +191,7 @@ class RoutinepalSqliteDb implements RoutinepalApi {
   }
 
   @override
-  Future<int?> createTask(Task task, [int? groupId]) async {
+  Future<int?> createTask(TaskBase task, [int? groupId]) async {
     try {
       return await _db!.insert('tasks', {
         'title': task.title,
@@ -221,12 +221,12 @@ class RoutinepalSqliteDb implements RoutinepalApi {
   }
 
   @override
-  Future<List<Task>> getTasksPartOfGroup(int groupId) async {
+  Future<List<TaskBase>> getTasksPartOfGroup(int groupId) async {
     List<Map<String, dynamic>> results =
         await _db!.query('tasks', where: 'task_group_id = $groupId');
 
     return results.map((task) {
-      return Task(
+      return TaskBase(
         id: task['task_id'],
         title: task['title'],
         description: task['description'],
@@ -266,7 +266,7 @@ class RoutinepalSqliteDb implements RoutinepalApi {
       where: 'group_id = $taskGroupId',
     );
 
-    List<Task> tasks = await getTasksPartOfGroup(taskGroupId);
+    List<TaskBase> tasks = await getTasksPartOfGroup(taskGroupId);
 
     return Routine(
       id: routineData['routine_id'] as int,
@@ -279,12 +279,12 @@ class RoutinepalSqliteDb implements RoutinepalApi {
   }
 
   @override
-  Future<List<Task>> getLooseTasks() async {
+  Future<List<TaskBase>> getLooseTasks() async {
     List<Map<String, dynamic>> taskData =
         await _db!.query('tasks', where: 'task_group_id IS NULL');
 
     return taskData.map((task) {
-      return Task(
+      return TaskBase(
         id: task['task_id'] as int,
         title: task['title'] as String,
         description: task['description'] as String,
@@ -318,10 +318,10 @@ class RoutinepalSqliteDb implements RoutinepalApi {
         where: 'completion_date = \'${DbUtils.formatSqlDate(date)}\'');
 
     List<TaskCompletion> completions = [];
-    List<Task> tasksForVerification = [];
+    List<TaskBase> tasksForVerification = [];
 
     for (var completion in completionData) {
-      Task task = (await getTask(completion['task_id'] as int))!;
+      TaskBase task = (await getTask(completion['task_id'] as int))!;
 
       // The check below is a self-cleanup action to remove duplicated completions.
       if (!tasksForVerification.contains(task)) {
@@ -372,14 +372,14 @@ class RoutinepalSqliteDb implements RoutinepalApi {
 
   @override
   Future<TaskCompletion?> getSingleTaskCompletion(int taskId, DateTime date,
-      [Task? task]) async {
+      [TaskBase? task]) async {
     var completions = await _db!.query('task_completions',
         where:
             'task_id = $taskId AND completion_date = \'${DbUtils.formatSqlDate(date)}\'');
 
     if (completions.isNotEmpty) {
       return TaskCompletion(
-        task: task ?? (await getTask(taskId)) ?? Task.mock(taskId),
+        task: task ?? (await getTask(taskId)) ?? TaskBase.mock(taskId),
         completionTime:
             DbUtils.parseSqlTime(completions[0]['completion_time'] as String),
         isFulfilled: (completions[0]['is_completed'] as int) == 1,

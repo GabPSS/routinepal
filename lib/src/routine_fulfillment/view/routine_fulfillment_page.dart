@@ -21,8 +21,8 @@ class RoutineFulfillmentPage extends StatefulWidget {
 
 class _RoutineFulfillmentPageState extends State<RoutineFulfillmentPage> {
   int currentPage = -1;
-  List<Task> tasksRemaining = [];
-  Task get currentTask => tasksRemaining[currentPage];
+  List<TaskBase> tasksRemaining = [];
+  TaskBase get currentTask => tasksRemaining[currentPage];
   bool get isTimeBased =>
       currentTask.maxDuration != null || currentTask.minDuration != null;
 

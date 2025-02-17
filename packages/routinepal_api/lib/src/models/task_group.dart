@@ -4,7 +4,7 @@ import 'task.dart';
 class TaskGroup {
   final int id;
   final String name;
-  final List<Task> tasks;
+  final List<TaskBase> tasks;
 
   TaskGroup({
     required this.id,
