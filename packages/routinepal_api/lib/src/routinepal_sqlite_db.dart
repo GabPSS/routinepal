@@ -191,6 +191,36 @@ class RoutinepalSqliteDb implements RoutinepalApi {
   }
 
   @override
+  Future<int?> createTask(Task task, [int? groupId]) async {
+    try {
+      return await _db!.insert('tasks', {
+        'title': task.title,
+        'description': task.description,
+        'task_group_id': groupId,
+        'minimum_duration_min': task.minDuration,
+        'maximum_duration_min': task.maxDuration,
+      });
+    } catch (e) {
+      return null;
+    }
+  }
+
+  @override
+  Future<int?> createTaskGroup(String name) async {
+    try {
+      return await _db!.insert('task_groups', {'name': name});
+    } catch (e) {
+      return null;
+    }
+  }
+
+  @override
+  Future<void> assignTaskToGroup(int taskId, int groupId) {
+    return _db!.update('tasks', {'task_group_id': groupId},
+        where: 'task_id = $taskId');
+  }
+
+  @override
   Future<List<Task>> getTasksPartOfGroup(int groupId) async {
     List<Map<String, dynamic>> results =
         await _db!.query('tasks', where: 'task_group_id = $groupId');

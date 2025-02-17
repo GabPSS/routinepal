@@ -7,6 +7,15 @@ abstract class RoutinepalApi {
   /// Fetches a certain task with id [taskId] from the database.
   Future<Task?> getTask(int taskId);
 
+  /// Creates a new task with the given data.
+  Future<int?> createTask(Task task, [int? groupId]);
+
+  /// Creates a new task group with the given [name].
+  Future<int?> createTaskGroup(String name);
+
+  /// Assigns a task with id [taskId] to a group with id [groupId].
+  Future<void> assignTaskToGroup(int taskId, int groupId);
+
   /// Fetches all tasks part of a [TaskGroup] with id [groupId].
   Future<List<Task>> getTasksPartOfGroup(int groupId);
 

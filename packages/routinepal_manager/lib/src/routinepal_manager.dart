@@ -164,6 +164,18 @@ class RoutinepalManager {
     log("Task not unfulfillable: completion already exists");
     return false;
   }
+
+  Future<void> createTask(models.Task task) async {
+    var newTask = api_lib.Task(
+      title: task.title,
+      description: task.description,
+      minDuration: task.minDuration,
+      maxDuration: task.maxDuration,
+      id: 0,
+    );
+
+    await api.createTask(newTask);
+  }
 }
 
 extension on Iterable<api_lib.TaskCompletion> {
