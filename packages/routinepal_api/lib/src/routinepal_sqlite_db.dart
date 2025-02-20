@@ -167,9 +167,6 @@ class RoutinepalSqliteDb implements RoutinepalApi {
         }
       },
     );
-
-    //TODO: Remove this line when deploying
-    await _db!.execute('DELETE FROM task_completions');
   }
 
   @override
@@ -221,10 +218,9 @@ class RoutinepalSqliteDb implements RoutinepalApi {
   }
 
   @override
-  Future<List<TaskBase>> getTasksPartOfGroup(int groupId) async {
+  Future<List<TaskBase>> getAllTasks({String? where}) async {
     List<Map<String, dynamic>> results =
-        await _db!.query('tasks', where: 'task_group_id = $groupId');
-
+        await _db!.query('tasks', where: where);
     return results.map((task) {
       return TaskBase(
         id: task['task_id'],
@@ -234,6 +230,16 @@ class RoutinepalSqliteDb implements RoutinepalApi {
         maxDuration: task['maximum_duration_min'],
       );
     }).toList();
+  }
+
+  @override
+  Future<List<TaskBase>> getTasksPartOfGroup(int groupId) {
+    return getAllTasks(where: 'task_group_id = $groupId');
+  }
+
+  @override
+  Future<List<TaskBase>> getLooseTasks() {
+    return getAllTasks(where: 'task_group_id IS NULL');
   }
 
   @override
@@ -279,22 +285,6 @@ class RoutinepalSqliteDb implements RoutinepalApi {
   }
 
   @override
-  Future<List<TaskBase>> getLooseTasks() async {
-    List<Map<String, dynamic>> taskData =
-        await _db!.query('tasks', where: 'task_group_id IS NULL');
-
-    return taskData.map((task) {
-      return TaskBase(
-        id: task['task_id'] as int,
-        title: task['title'] as String,
-        description: task['description'] as String,
-        minDuration: task['minimum_duration_min'] as int?,
-        maxDuration: task['maximum_duration_min'] as int?,
-      );
-    }).toList();
-  }
-
-  @override
   Future<List<TaskGroup>> getNonRoutineTaskGroups() async {
     var taskGroupData = await _db!.rawQuery(
         'SELECT * FROM task_groups WHERE group_id NOT IN (SELECT task_group_id FROM routines)');
@@ -318,22 +308,23 @@ class RoutinepalSqliteDb implements RoutinepalApi {
         where: 'completion_date = \'${DbUtils.formatSqlDate(date)}\'');
 
     List<TaskCompletion> completions = [];
-    List<TaskBase> tasksForVerification = [];
+    List<TaskBase> completedTasks = [];
 
     for (var completion in completionData) {
-      TaskBase task = (await getTask(completion['task_id'] as int))!;
+      TaskBase completionTask = (await getTask(completion['task_id'] as int))!;
 
       // The check below is a self-cleanup action to remove duplicated completions.
-      if (!tasksForVerification.contains(task)) {
-        tasksForVerification.add(task);
-        bool isCompleted = (completion['is_completed'] as int) == 1;
+      if (!completedTasks.contains(completionTask)) {
+        completedTasks.add(completionTask);
+
+        bool isTaskFulfilled = (completion['is_completed'] as int) == 1;
         TimeOfDay completionTime =
             DbUtils.parseSqlTime(completion['completion_time'] as String);
 
         completions.add(TaskCompletion(
-          task: task,
+          task: completionTask,
           completionTime: completionTime,
-          isFulfilled: isCompleted,
+          isFulfilled: isTaskFulfilled,
         ));
       } else {
         purgeInvalidCompletion(completion['completion_id'] as int);

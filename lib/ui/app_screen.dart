@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:routinepal/src/history/view/history_page.dart';
+import 'package:routinepal/src/completion_history/view/history_page.dart';
 import 'package:routinepal/ui/app_pages/home_page.dart';
 import 'package:routinepal/ui/app_pages/routines_page.dart';
+import 'package:routinepal/ui/app_pages/task_creation_page.dart';
 import 'package:routinepal/ui/app_pages/tasks_page.dart';
 
 class AppScreen extends StatefulWidget {
@@ -39,6 +40,13 @@ class _AppScreenState extends State<AppScreen> {
       appBar: AppBar(
         title: Text(destinations[selectedPage].label),
       ),
+      floatingActionButton: selectedPage == 1
+          ? FloatingActionButton(
+              onPressed: () => Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => TaskCreationPage())),
+              child: Icon(Icons.add),
+            )
+          : null,
       body: switch (selectedPage) {
         0 => const HomePage(),
         1 => const TasksPage(),

@@ -97,13 +97,50 @@ class RoutinepalManager {
     return result;
   }
 
-  /// Filters a set of TaskCompletions according to a list of tasks.
-  List<TaskCompletion> taskCompletionsFor(
-      List<TaskBase> tasks, List<TaskCompletion> completions) {
-    return completions
-        .where((completion) => tasks.contains(completion.task))
-        .toList();
+  Future<List<String>> getAllTaskNames() async {
+    var tasks = await api.getAllTasks();
+    return tasks.map((task) => task.title).toList();
   }
+
+  /// Obtains a list of all task completions for the last [numberOfDays] days.
+  Future<Map<DateTime, Map<TaskBase, TaskCompletion?>>> getCompletionHistory(
+      int numberOfDays) async {
+    var initialDate = DateTime.now().subtract(Duration(days: numberOfDays));
+    var currentDate =
+        DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day)
+            .add(Duration(days: 1));
+    var allTasks = await api.getAllTasks();
+    allTasks.sort((a, b) => a.id.compareTo(b.id));
+
+    Map<DateTime, Map<TaskBase, TaskCompletion?>> result = {};
+    Map<TaskBase, TaskCompletion?> completionsForDate;
+
+    for (var iteratingDate = initialDate;
+        iteratingDate.isBefore(currentDate);
+        iteratingDate = iteratingDate.add(Duration(days: 1))) {
+      List<TaskCompletion> completions =
+          await api.getTaskCompletionsForDate(iteratingDate);
+      log("Manager: Completion history for date $iteratingDate has ${completions.length} completions");
+
+      completionsForDate = {};
+
+      for (var task in allTasks) {
+        var completion = completions.forTask(task);
+        completionsForDate[task] = completion;
+      }
+
+      result[iteratingDate] = completionsForDate;
+    }
+
+    return result;
+  }
+
+  /// Filters a set of TaskCompletions according to a list of tasks.
+  List<TaskCompletion> filterCompletions(
+          List<TaskBase> tasks, List<TaskCompletion> completions) =>
+      completions
+          .where((completion) => tasks.contains(completion.task))
+          .toList();
 
   Future<bool> attemptTaskFulfillment(Task task) async {
     bool isFulfillable = true;

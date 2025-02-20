@@ -22,6 +22,9 @@ abstract class RoutinepalApi {
   /// Fetches all tasks not part of groups.
   Future<List<TaskBase>> getLooseTasks();
 
+  /// Fetches all completable tasks from the database.
+  Future<List<TaskBase>> getAllTasks();
+
   /// Fetches all task groups which are not routines.
   Future<List<TaskGroup>> getNonRoutineTaskGroups();
 
