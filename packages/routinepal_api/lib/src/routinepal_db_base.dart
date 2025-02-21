@@ -44,4 +44,7 @@ abstract class RoutinepalApi {
 
   /// Creates an entry in `task_completions` for a task with id [taskId].
   Future<void> recordTaskFulfillment(int taskId, bool isFulfilled);
+
+  /// Obtains information regarding the current user of the app. If the app was not set up, returns null.
+  Future<UserInfo?> getUserInfo();
 }

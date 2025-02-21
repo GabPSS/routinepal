@@ -8,12 +8,17 @@ const Null fulfillable = null;
 
 class RoutinepalManager {
   final RoutinepalApi api;
+  UserInfo? _userInfo;
   int toleranceMins = 15;
 
   RoutinepalManager(this.api);
 
+  /// Defines if this is the first time the user is setting up the app.
+  bool get isFirstSetup => _userInfo == null;
+
   Future<void> init() async {
     await api.init();
+    _userInfo = await api.getUserInfo();
   }
 
   /// Obtains a list of all routines that can be fulfilled at the current time.

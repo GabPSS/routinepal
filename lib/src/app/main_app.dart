@@ -38,10 +38,11 @@ class _MainAppState extends State<MainApp> {
             )),
         darkTheme: ThemeData(
           colorScheme: ColorScheme.fromSeed(
-            seedColor: Colors.cyan,
+            seedColor: const Color.fromARGB(255, 32, 0, 212),
             brightness: Brightness.dark,
           ),
         ),
+        //TODO: Add first time setup screen
         home: const AppScreen(),
       ),
     );

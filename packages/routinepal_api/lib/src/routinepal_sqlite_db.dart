@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:routinepal_api/src/models/user_info.dart';
 import 'package:routinepal_api/src/routinepal_db_base.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -58,7 +59,7 @@ class RoutinepalSqliteDb implements RoutinepalApi {
       user_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
       user_name TEXT NOT NULL,
       user_last_update DATETIME NOT NULL,
-      user_last_reset DATE NOT NULL
+      user_last_reset DATETIME NOT NULL
     );
     """);
 
@@ -382,6 +383,20 @@ class RoutinepalSqliteDb implements RoutinepalApi {
         completionTime:
             DbUtils.parseSqlTime(completions[0]['completion_time'] as String),
         isFulfilled: (completions[0]['is_completed'] as int) == 1,
+      );
+    }
+
+    return null;
+  }
+
+  Future<UserInfo?> getUserInfo() async {
+    var results = await _db!.query('user_info');
+
+    if (results.isNotEmpty) {
+      return UserInfo(
+        name: results[0]['user_name'] as String,
+        lastUpdate: DateTime.parse(results[0]['user_last_update'] as String),
+        lastReset: DateTime.parse(results[0]['user_last_reset'] as String),
       );
     }
 
