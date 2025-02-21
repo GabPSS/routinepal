@@ -132,8 +132,7 @@ class _TimerFulfillmentWidgetState extends State<TimerFulfillmentWidget> {
 
   void startTimer() {
     if (!isRunning) {
-      //TODO: Change this later
-      timer = Timer.periodic(const Duration(milliseconds: 120),
+      timer = Timer.periodic(const Duration(seconds: 1),
           maxSeconds != 0 ? tickWhenMaxIsSet : tickWhenMaxIsNotSet);
     }
     setState(() {});

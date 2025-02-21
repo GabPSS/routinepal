@@ -60,12 +60,12 @@ class HistoryChart extends StatelessWidget {
   Icon getIconForTaskCompletion(TaskCompletion? taskCompletion) {
     if (taskCompletion != null) {
       if (taskCompletion.isFulfilled) {
-        return Icon(Icons.check_circle, color: Colors.green);
+        return const Icon(Icons.check_circle, color: Colors.green);
       } else {
-        return Icon(Icons.error, color: Colors.red);
+        return const Icon(Icons.error, color: Colors.red);
       }
     } else {
-      return Icon(Icons.circle_outlined, color: Colors.grey);
+      return const Icon(Icons.circle_outlined, color: Colors.grey);
     }
   }
 }

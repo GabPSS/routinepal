@@ -27,9 +27,8 @@ class RoutinepalManager {
         routine.tasks.getStatus(taskCompletions.allFor(routine.tasks)) !=
         fulfillable);
 
-    //TODO: Uncomment when deploying
-    // routines.removeWhere((element) =>
-    //     TimeOfDay.now().isNotWithin(element.fulfillmentTime, toleranceMins));
+    routines.removeWhere((element) =>
+        TimeOfDay.now().isNotWithin(element.fulfillmentTime, toleranceMins));
 
     return routines;
   }
@@ -167,9 +166,9 @@ class RoutinepalManager {
 
       if (routine != null) {
         isFulfillable = true;
-        //TODO: Uncomment when deploying
-        // isFulfillable =
-        //     routine.fulfillmentTime.isWithin(TimeOfDay.now(), toleranceMins);
+
+        isFulfillable =
+            routine.fulfillmentTime.isWithin(TimeOfDay.now(), toleranceMins);
         log("Task part of ${isFulfillable ? "" : "un"}fulfillable routine ${routine.title}");
       }
     }

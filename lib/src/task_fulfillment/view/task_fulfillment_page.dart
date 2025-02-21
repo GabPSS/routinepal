@@ -80,8 +80,8 @@ class _TaskFulfillmentPageState extends State<TaskFulfillmentPage> {
 
   List<Widget> buildSubtaskList(BuildContext context) {
     return [
-      Padding(
-        padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+      const Padding(
+        padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
         child: Text("Tasks:"),
       ),
       FutureBuilder<List<Task>>(
@@ -115,7 +115,6 @@ class _TaskFulfillmentPageState extends State<TaskFulfillmentPage> {
           }
         },
       ),
-      //TODO: Add list of tasks. Maybe building from a future will be required in order to fetch the tasks, or at least a bloc.
     ];
   }
 
