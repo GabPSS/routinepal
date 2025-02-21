@@ -30,7 +30,7 @@ class _HistoryPageState extends State<HistoryPage> {
       builder: (context, state) {
         switch (state) {
           case CompletionHistoryInitial():
-            return const Center(child: Text("No data yet! Check back later"));
+            return Container();
           case CompletionHistoryLoading():
             return const Center(child: CircularProgressIndicator());
           case CompletionHistoryLoaded():

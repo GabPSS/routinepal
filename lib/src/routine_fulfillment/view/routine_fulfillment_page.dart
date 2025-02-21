@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:routinepal/src/routine_fulfillment/bloc/fulfillable_routines_bloc.dart';
 import 'package:routinepal/src/task_fulfillment/bloc/task_fulfillment_bloc.dart';
-import 'package:routinepal/ui/app_pages/fulfillment_result_page.dart';
+import 'package:routinepal/src/app/view/navigation/fulfillment_result_page.dart';
 import 'package:routinepal/src/task_fulfillment/view/timer_fulfillment_widget.dart';
 import 'package:routinepal_api/routinepal_api.dart';
 import 'package:routinepal_manager/routinepal_manager.dart' as mgr;

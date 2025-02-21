@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:routinepal/src/completion_history/view/history_page.dart';
-import 'package:routinepal/ui/app_pages/home_page.dart';
-import 'package:routinepal/ui/app_pages/routines_page.dart';
-import 'package:routinepal/ui/app_pages/task_creation_page.dart';
-import 'package:routinepal/ui/app_pages/tasks_page.dart';
+import 'package:routinepal/src/app/view/navigation/history_page.dart';
+import 'package:routinepal/src/app/view/navigation/home_page.dart';
+import 'package:routinepal/src/app/view/navigation/routines_page.dart';
+import 'package:routinepal/src/app/view/navigation/task_creation_page.dart';
+import 'package:routinepal/src/app/view/navigation/tasks_page.dart';
 
 class AppScreen extends StatefulWidget {
   const AppScreen({super.key});

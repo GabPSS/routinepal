@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:routinepal/ui/dialogs/fulfillment_confirmation_dialog.dart';
+import 'package:routinepal/src/app/view/dialogs/fulfillment_confirmation_dialog.dart';
 
 class TimerFulfillmentWidget extends StatefulWidget {
   final int? minDurationMinutes;
