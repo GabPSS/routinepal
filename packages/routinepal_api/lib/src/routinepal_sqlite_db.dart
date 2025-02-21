@@ -11,12 +11,11 @@ class RoutinepalSqliteDb implements RoutinepalApi {
 
   RoutinepalSqliteDb();
 
-  //TODO: Set [createDemoDb] to false when deploying
   @override
-  Future<void> init([bool createDemoDb = true]) async {
+  Future<void> init([bool createDemoDb = false]) async {
     _db = await openDatabase(
       'routine_data.db',
-      version: 1,
+      version: 2,
       onCreate: (db, version) async {
         await db.execute("""
     CREATE TABLE task_groups (
@@ -51,6 +50,15 @@ class RoutinepalSqliteDb implements RoutinepalApi {
       completion_date DATE NOT NULL,
       completion_time TIME NOT NULL, is_completed INTEGER NOT NULL,
       CONSTRAINT task_completions_FK FOREIGN KEY (task_id) REFERENCES tasks(task_id) ON DELETE CASCADE ON UPDATE CASCADE
+    );
+    """);
+
+        await db.execute("""
+    CREATE TABLE "user_info" (
+      user_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+      user_name TEXT NOT NULL,
+      user_last_update DATETIME NOT NULL,
+      user_last_reset DATE NOT NULL
     );
     """);
 
