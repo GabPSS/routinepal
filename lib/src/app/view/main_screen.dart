@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:routinepal/src/app/bloc/app_bloc.dart';
 import 'package:routinepal/src/app/view/navigation/history_page.dart';
 import 'package:routinepal/src/app/view/navigation/home_page.dart';
 import 'package:routinepal/src/app/view/navigation/routines_page.dart';

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:routinepal/src/app/bloc/app_bloc.dart';
-import 'package:routinepal/src/app/view/main_screen.dart';
 import 'package:routinepal/src/first_time_setup/model/first_time_setup_info.dart';
 import 'package:routinepal/src/first_time_setup/view/pages/name_page.dart';
 import 'package:routinepal/src/first_time_setup/view/pages/sleep_cycle_page.dart';

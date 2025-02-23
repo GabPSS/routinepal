@@ -9,4 +9,8 @@ final class AppLoading extends AppState {}
 
 final class AppSetup extends AppState {}
 
-final class AppReady extends AppState {}
+final class AppReady extends AppState {
+  final String userName;
+
+  AppReady(this.userName);
+}

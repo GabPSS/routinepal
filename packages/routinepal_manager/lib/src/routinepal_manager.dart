@@ -15,6 +15,7 @@ class RoutinepalManager {
 
   /// Defines if this is the first time the user is setting up the app.
   bool get isFirstSetup => _userInfo == null;
+  String get userName => _userInfo?.name ?? "RoutinePal";
 
   Future<void> init() async {
     await api.init();
@@ -128,7 +129,6 @@ class RoutinepalManager {
         iteratingDate = iteratingDate.add(Duration(days: 1))) {
       List<TaskCompletion> completions =
           await api.getTaskCompletionsForDate(iteratingDate);
-      log("Manager: Completion history for date $iteratingDate has ${completions.length} completions");
 
       completionsForDate = {};
 

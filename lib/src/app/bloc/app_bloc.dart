@@ -17,7 +17,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
       emit(AppLoading());
       //TODO: Save setup info
       await manager.reload();
-      emit(AppReady());
+      emit(AppReady(manager.userName));
     });
 
     on<AppLoadRequested>((event, emit) async {
@@ -27,15 +27,14 @@ class AppBloc extends Bloc<AppEvent, AppState> {
       if (manager.isFirstSetup) {
         emit(AppSetup());
       } else {
-        emit(AppReady());
+        emit(AppReady(manager.userName));
       }
     });
 
     on<AppReloadRequested>((event, emit) async {
       log("APP: Reload requested");
-      emit(AppLoading());
       await manager.reload();
-      emit(AppReady());
+      emit(AppReady(manager.userName));
     });
   }
 }

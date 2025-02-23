@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:routinepal_api/routinepal_api.dart';
@@ -13,6 +15,7 @@ class CompletionHistoryBloc
 
   CompletionHistoryBloc(this.repository) : super(CompletionHistoryInitial()) {
     on<CompletionHistoryLoadRequested>((event, emit) async {
+      log("Completion history load requested");
       emit(CompletionHistoryLoading());
       var taskNames = await repository.getAllTaskNames();
       var completions = await repository.getCompletionHistory(event.length);
