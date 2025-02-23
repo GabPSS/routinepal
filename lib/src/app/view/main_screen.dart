@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:routinepal/src/app/bloc/app_bloc.dart';
 import 'package:routinepal/src/app/view/navigation/history_page.dart';
 import 'package:routinepal/src/app/view/navigation/home_page.dart';
 import 'package:routinepal/src/app/view/navigation/routines_page.dart';
@@ -44,9 +42,11 @@ class _MainScreenState extends State<MainScreen> {
       ),
       floatingActionButton: selectedPage == 1
           ? FloatingActionButton(
-              onPressed: () => Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => TaskCreationPage())),
-              child: Icon(Icons.add),
+              onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const TaskCreationPage())),
+              child: const Icon(Icons.add),
             )
           : null,
       body: switch (selectedPage) {

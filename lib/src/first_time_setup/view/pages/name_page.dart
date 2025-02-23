@@ -50,13 +50,13 @@ class _NamePageState extends State<NamePage> {
             onChanged: (newName) {
               _name = newName;
             },
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               hintText: "John",
               helperText:
                   "Use your first name, we'll call you this in the app.",
             ),
           ),
-          Spacer(),
+          const Spacer(),
           if (widget.initialName.isNotEmpty)
             NextButton(
               onNext: () {

@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:routinepal/src/first_time_setup/model/first_time_setup_info.dart';
-import 'package:routinepal_manager/src/routinepal_manager.dart';
+import 'package:routinepal_manager/routinepal_manager.dart';
 
 part 'app_event.dart';
 part 'app_state.dart';

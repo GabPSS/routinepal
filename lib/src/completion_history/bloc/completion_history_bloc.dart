@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:routinepal_api/routinepal_api.dart';
-import 'package:routinepal_api/src/models/task_completion.dart';
 import 'package:routinepal_manager/routinepal_manager.dart';
 
 part 'completion_history_event.dart';

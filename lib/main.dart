@@ -47,7 +47,7 @@ Future<void> main() async {
               },
             ),
           ],
-          child: App(),
+          child: const App(),
         )),
   ));
 }

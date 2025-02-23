@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:routinepal_api/src/models/user_info.dart';
 import 'package:routinepal_api/src/routinepal_db_base.dart';
 import 'package:sqflite/sqflite.dart';
 
