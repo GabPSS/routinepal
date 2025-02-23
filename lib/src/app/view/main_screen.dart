@@ -5,14 +5,14 @@ import 'package:routinepal/src/app/view/navigation/routines_page.dart';
 import 'package:routinepal/src/app/view/navigation/task_creation_page.dart';
 import 'package:routinepal/src/app/view/navigation/tasks_page.dart';
 
-class AppScreen extends StatefulWidget {
-  const AppScreen({super.key});
+class MainScreen extends StatefulWidget {
+  const MainScreen({super.key});
 
   @override
-  State<AppScreen> createState() => _AppScreenState();
+  State<MainScreen> createState() => _MainScreenState();
 }
 
-class _AppScreenState extends State<AppScreen> {
+class _MainScreenState extends State<MainScreen> {
   static const destinations = [
     NavigationDestination(
       icon: Icon(Icons.home),

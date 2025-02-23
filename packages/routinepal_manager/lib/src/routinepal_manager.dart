@@ -18,6 +18,10 @@ class RoutinepalManager {
 
   Future<void> init() async {
     await api.init();
+    await reload();
+  }
+
+  Future<void> reload() async {
     _userInfo = await api.getUserInfo();
   }
 
