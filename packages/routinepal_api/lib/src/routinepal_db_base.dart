@@ -11,10 +11,10 @@ abstract class RoutinepalApi {
   Future<int?> createTask(TaskBase task, [int? groupId]);
 
   /// Creates a new task group with the given [name].
-  Future<int?> createTaskGroup(String name);
+  Future<int?> createTaskgroup(String name);
 
   /// Assigns a task with id [taskId] to a group with id [groupId].
-  Future<void> assignTaskToGroup(int taskId, int groupId);
+  Future<void> assignGroupIdToTask(int taskId, int groupId);
 
   /// Fetches all tasks part of a [TaskGroup] with id [groupId].
   Future<List<TaskBase>> getTasksPartOfGroup(int groupId);
@@ -26,12 +26,12 @@ abstract class RoutinepalApi {
   Future<List<TaskBase>> getAllTasks();
 
   /// Fetches all task groups which are not routines.
-  Future<List<TaskGroup>> getNonRoutineTaskGroups();
+  Future<List<TaskGroup>> getNonRoutineTaskgroups();
 
   /// Fetches all routines from the database.
   Future<List<Routine>> getRoutines();
 
-  Future<Routine?> isTaskGroupPartOfRoutine(int groupId);
+  Future<Routine?> getRoutineTaskgroup(int groupId);
 
   /// Fetches a certain routine with id [routineId] from the database.
   Future<Routine?> getRoutine(int routineId);
@@ -43,7 +43,7 @@ abstract class RoutinepalApi {
   Future<TaskCompletion?> getSingleTaskCompletion(int taskId, DateTime date);
 
   /// Creates an entry in `task_completions` for a task with id [taskId].
-  Future<void> recordTaskFulfillment(int taskId, bool isFulfilled);
+  Future<void> createTaskCompletion(int taskId, bool isFulfilled);
 
   /// Obtains information regarding the current user of the app. If the app was not set up, returns null.
   Future<UserInfo?> getUserInfo();

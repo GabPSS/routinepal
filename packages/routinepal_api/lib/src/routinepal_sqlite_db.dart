@@ -177,6 +177,8 @@ class RoutinepalSqliteDb implements RoutinepalApi {
     );
   }
 
+  // GET functions
+
   @override
   Future<TaskBase?> getTask(int taskId) async {
     List<Map<String, dynamic>> results =
@@ -193,36 +195,6 @@ class RoutinepalSqliteDb implements RoutinepalApi {
     }
 
     return null;
-  }
-
-  @override
-  Future<int?> createTask(TaskBase task, [int? groupId]) async {
-    try {
-      return await _db!.insert('tasks', {
-        'title': task.title,
-        'description': task.description,
-        'task_group_id': groupId,
-        'minimum_duration_min': task.minDuration,
-        'maximum_duration_min': task.maxDuration,
-      });
-    } catch (e) {
-      return null;
-    }
-  }
-
-  @override
-  Future<int?> createTaskGroup(String name) async {
-    try {
-      return await _db!.insert('task_groups', {'name': name});
-    } catch (e) {
-      return null;
-    }
-  }
-
-  @override
-  Future<void> assignTaskToGroup(int taskId, int groupId) {
-    return _db!.update('tasks', {'task_group_id': groupId},
-        where: 'task_id = $taskId');
   }
 
   @override
@@ -271,29 +243,8 @@ class RoutinepalSqliteDb implements RoutinepalApi {
     throw UnimplementedError();
   }
 
-  Future<Routine> _buildRoutineFromData(
-      Map<String, Object?> routineData, Database db) async {
-    int taskGroupId = routineData['task_group_id'] as int;
-
-    var taskGroupData = await db.query(
-      'task_groups',
-      where: 'group_id = $taskGroupId',
-    );
-
-    List<TaskBase> tasks = await getTasksPartOfGroup(taskGroupId);
-
-    return Routine(
-      id: routineData['routine_id'] as int,
-      taskGroupId: taskGroupId,
-      title: taskGroupData[0]['name'] as String,
-      tasks: tasks,
-      fulfillmentTime:
-          DbUtils.parseSqlTime(routineData['fulfillment_time'] as String),
-    );
-  }
-
   @override
-  Future<List<TaskGroup>> getNonRoutineTaskGroups() async {
+  Future<List<TaskGroup>> getNonRoutineTaskgroups() async {
     var taskGroupData = await _db!.rawQuery(
         'SELECT * FROM task_groups WHERE group_id NOT IN (SELECT task_group_id FROM routines)');
 
@@ -335,21 +286,15 @@ class RoutinepalSqliteDb implements RoutinepalApi {
           isFulfilled: isTaskFulfilled,
         ));
       } else {
-        purgeInvalidCompletion(completion['completion_id'] as int);
+        deleteInvalidCompletion(completion['completion_id'] as int);
       }
     }
 
     return completions;
   }
 
-  Future<void> purgeInvalidCompletion(int completionId) async {
-    log("WARNING: Detected a duplicate completion entry with id $completionId");
-    await _db!
-        .delete('task_completions', where: 'completion_id = $completionId');
-  }
-
   @override
-  Future<Routine?> isTaskGroupPartOfRoutine(int groupId) async {
+  Future<Routine?> getRoutineTaskgroup(int groupId) async {
     var query = await _db!.query('routines', where: 'task_group_id = $groupId');
 
     if (query.isNotEmpty) {
@@ -357,16 +302,6 @@ class RoutinepalSqliteDb implements RoutinepalApi {
     }
 
     return null;
-  }
-
-  @override
-  Future<void> recordTaskFulfillment(int taskId, bool isFulfilled) async {
-    await _db!.insert('task_completions', {
-      'task_id': taskId,
-      'completion_date': DbUtils.formatSqlDate(DateTime.now()),
-      'completion_time': DbUtils.formatSqlTime(TimeOfDay.now()),
-      'is_completed': isFulfilled ? 1 : 0,
-    });
   }
 
   @override
@@ -402,6 +337,50 @@ class RoutinepalSqliteDb implements RoutinepalApi {
     return null;
   }
 
+  // CREATE functions
+
+  @override
+  Future<int?> createTask(TaskBase task, [int? groupId]) async {
+    try {
+      return await _db!.insert('tasks', {
+        'title': task.title,
+        'description': task.description,
+        'task_group_id': groupId,
+        'minimum_duration_min': task.minDuration,
+        'maximum_duration_min': task.maxDuration,
+      });
+    } catch (e) {
+      return null;
+    }
+  }
+
+  @override
+  Future<int?> createTaskgroup(String name) async {
+    try {
+      return await _db!.insert('task_groups', {'name': name});
+    } catch (e) {
+      return null;
+    }
+  }
+
+  @override
+  Future<void> createTaskCompletion(int taskId, bool isFulfilled) async {
+    await _db!.insert('task_completions', {
+      'task_id': taskId,
+      'completion_date': DbUtils.formatSqlDate(DateTime.now()),
+      'completion_time': DbUtils.formatSqlTime(TimeOfDay.now()),
+      'is_completed': isFulfilled ? 1 : 0,
+    });
+  }
+
+  // UPDATE functions
+
+  @override
+  Future<void> assignGroupIdToTask(int taskId, int groupId) {
+    return _db!.update('tasks', {'task_group_id': groupId},
+        where: 'task_id = $taskId');
+  }
+
   @override
   Future<void> updateUserInfo(UserInfo userInfo) async {
     await _db!.delete('user_info');
@@ -410,6 +389,37 @@ class RoutinepalSqliteDb implements RoutinepalApi {
       'user_last_update': userInfo.lastUpdate.toIso8601String(),
       'user_last_reset': userInfo.lastReset.toIso8601String(),
     });
+  }
+
+  // DELETE functions
+
+  Future<void> deleteInvalidCompletion(int completionId) async {
+    log("WARNING: Detected a duplicate completion entry with id $completionId");
+    await _db!
+        .delete('task_completions', where: 'completion_id = $completionId');
+  }
+
+  // Auxiliary functions
+
+  Future<Routine> _buildRoutineFromData(
+      Map<String, Object?> routineData, Database db) async {
+    int taskGroupId = routineData['task_group_id'] as int;
+
+    var taskGroupData = await db.query(
+      'task_groups',
+      where: 'group_id = $taskGroupId',
+    );
+
+    List<TaskBase> tasks = await getTasksPartOfGroup(taskGroupId);
+
+    return Routine(
+      id: routineData['routine_id'] as int,
+      taskGroupId: taskGroupId,
+      title: taskGroupData[0]['name'] as String,
+      tasks: tasks,
+      fulfillmentTime:
+          DbUtils.parseSqlTime(routineData['fulfillment_time'] as String),
+    );
   }
 }
 

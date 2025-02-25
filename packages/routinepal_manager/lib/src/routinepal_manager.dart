@@ -57,7 +57,7 @@ class RoutinepalManager {
   Future<List<Task>> getTasksFor(DateTime date) async {
     List<TaskCompletion> taskCompletions =
         await api.getTaskCompletionsForDate(date);
-    var taskGroups = await api.getNonRoutineTaskGroups();
+    var taskGroups = await api.getNonRoutineTaskgroups();
     var looseTasks = await api.getLooseTasks();
 
     List<Task> result = [];
@@ -180,7 +180,7 @@ class RoutinepalManager {
       Routine? routine;
 
       if (task.parentGroupId != null) {
-        routine = await api.isTaskGroupPartOfRoutine(task.parentGroupId!);
+        routine = await api.getRoutineTaskgroup(task.parentGroupId!);
       }
 
       if (routine != null) {
@@ -194,7 +194,7 @@ class RoutinepalManager {
 
     // Task fulfillment
     if (isFulfillable) {
-      api.recordTaskFulfillment(task.id, true);
+      api.createTaskCompletion(task.id, true);
       log("INFO: Task fulfilled successfully");
     } else {
       log("WARNING: Task not fulfillable");
@@ -210,7 +210,7 @@ class RoutinepalManager {
         .singleOrNull;
 
     if (taskCompletion == fulfillable) {
-      api.recordTaskFulfillment(task.id, false);
+      api.createTaskCompletion(task.id, false);
       log("Task unfulfilled successfully");
       return true;
     }
