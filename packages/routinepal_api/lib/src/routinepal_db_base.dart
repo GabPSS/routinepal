@@ -47,4 +47,7 @@ abstract class RoutinepalApi {
 
   /// Obtains information regarding the current user of the app. If the app was not set up, returns null.
   Future<UserInfo?> getUserInfo();
+
+  /// Updates or creates user information on the database.
+  Future<void> updateUserInfo(UserInfo userInfo);
 }

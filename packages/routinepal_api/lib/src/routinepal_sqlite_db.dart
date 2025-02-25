@@ -401,6 +401,16 @@ class RoutinepalSqliteDb implements RoutinepalApi {
 
     return null;
   }
+
+  @override
+  Future<void> updateUserInfo(UserInfo userInfo) async {
+    await _db!.delete('user_info');
+    await _db!.insert('user_info', {
+      'user_name': userInfo.name,
+      'user_last_update': userInfo.lastUpdate.toIso8601String(),
+      'user_last_reset': userInfo.lastReset.toIso8601String(),
+    });
+  }
 }
 
 final class DbUtils {

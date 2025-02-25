@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:routinepal/src/app/bloc/app_bloc.dart';
 import 'package:routinepal/src/app/view/navigation/history_page.dart';
 import 'package:routinepal/src/app/view/navigation/home_page.dart';
 import 'package:routinepal/src/app/view/navigation/routines_page.dart';
 import 'package:routinepal/src/app/view/navigation/task_creation_page.dart';
 import 'package:routinepal/src/app/view/navigation/tasks_page.dart';
+import 'package:routinepal/utils.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -38,7 +41,17 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(destinations[selectedPage].label),
+        title: BlocBuilder<AppBloc, AppState>(
+          builder: (context, state) {
+            var defaultLabel = destinations[selectedPage].label;
+            if (selectedPage == 0 && state is AppReady) {
+              return Text(
+                  "Good ${Utils.getDayPeriod(DateTime.now())}, ${state.userName}!");
+            } else {
+              return Text(defaultLabel);
+            }
+          },
+        ),
       ),
       floatingActionButton: selectedPage == 1
           ? FloatingActionButton(

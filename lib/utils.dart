@@ -14,4 +14,15 @@ abstract final class Utils {
       null => Icons.circle_outlined,
     };
   }
+
+  static String getDayPeriod(DateTime value) {
+    var hour = value.hour;
+    return switch (hour) {
+      > 22 => 'night',
+      > 18 => 'evening',
+      > 12 => 'afternoon',
+      > 6 => 'morning',
+      _ => 'night',
+    };
+  }
 }

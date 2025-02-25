@@ -26,6 +26,16 @@ class RoutinepalManager {
     _userInfo = await api.getUserInfo();
   }
 
+  Future<void> updateSetupInfo(FirstTimeSetupInfo setupInfo) async {
+    log("Manager: Creating new user '${setupInfo.name}' at ${DateTime.now()}");
+    var userInfo = UserInfo(
+      name: setupInfo.name,
+      lastReset: DateTime.now(),
+      lastUpdate: DateTime.now(),
+    );
+    await api.updateUserInfo(userInfo);
+  }
+
   /// Obtains a list of all routines that can be fulfilled at the current time.
   ///
   /// A routine is considered fulfillable if all of its tasks have been completed and the current time is within [toleranceMins] minutes of the routine's fulfillment time.

@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:routinepal/src/first_time_setup/model/first_time_setup_info.dart';
+import 'package:routinepal_manager/src/models/first_time_setup_info.dart';
 import 'package:routinepal_manager/routinepal_manager.dart';
 
 part 'app_event.dart';
@@ -15,7 +15,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     on<AppSetupFinished>((event, emit) async {
       log("APP: Setup finished");
       emit(AppLoading());
-      //TODO: Save setup info
+      await manager.updateSetupInfo(event.setupInfo);
       await manager.reload();
       emit(AppReady(manager.userName));
     });
